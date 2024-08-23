@@ -6,3 +6,6 @@ flower==1.2.0
 celery_singleton==0.3.1
 django-redis==5.2.0
 python-dotenv
+djangorestframework-simplejwt
+djoser==2.2.3
+social-auth-app-django

@@ -13,7 +13,7 @@ class CoursesAPIView(ModelViewSet):
 
 
 class IndexView(ListView):
-    template_name = 'index.html'
+    template_name = 'services/index.html'
     model = Course
     context_object_name = 'courses'
 

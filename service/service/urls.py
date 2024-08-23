@@ -11,7 +11,11 @@ router.register('courses', CoursesAPIView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
+
     path('', include('services.urls', namespace='services')),
+    path('client/', include('clients.urls', namespace='clients')),
 ]
 
 urlpatterns += router.urls
