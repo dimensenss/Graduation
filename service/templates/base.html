@@ -47,62 +47,10 @@
 </div>
 <!-- Preloader Start -->
 
-{% block header %}
-<header>
-    <!-- Header Start -->
-    <div class="header-area header-transparent">
-        <div class="main-header ">
-            <div class="header-bottom  header-sticky">
-                <div class="container-fluid">
-                    <div class="row align-items-center">
-                        <!-- Logo -->
-                        <div class="col-xl-2 col-lg-2">
-                            <div class="logo">
-                                <a href="" class="logo">
-                                    /selfedu<br>
-                                    <span class="sub-logo">courses platform</span>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-xl-10 col-lg-10">
-                            <div class="menu-wrapper d-flex align-items-center justify-content-end">
-                                <!-- Main-menu -->
-                                <div class="main-menu d-none d-lg-block">
-                                    <nav>
-                                        <ul id="navigation">
-                                            <li><a href="courses.html">Курси</a></li>
-                                            <li><a href="about.html">Викладання</a></li>
-                                            <!--                                            <li><a href="#">Blog</a>-->
-                                            <!--                                                <ul class="submenu">-->
-                                            <!--                                                    <li><a href="blog.html">Blog</a></li>-->
-                                            <!--                                                    <li><a href="blog_details.html">Blog Details</a></li>-->
-                                            <!--                                                    <li><a href="elements.html">Element</a></li>-->
-                                            <!--                                                </ul>-->
-                                            <!--                                            </li>-->
-                                            <li><a href="contact.html">Співробітництво</a></li>
-                                            <!-- Button -->
-                                            <li class="button-header margin-left "><a href="#" class="btn btn3">Регістрація</a>
-                                            </li>
-                                            <li class="button-header"><a href="login.html" class="btn btn3">Вхід</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Mobile Menu -->
-                        <div class="col-12">
-                            <div class="mobile_menu d-block d-lg-none"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Header End -->
-</header>
-{% endblock header %}
-<main>
+{% block nav %}
+{% include "includes/navbar.html" %}
+{% endblock nav %}
+
 
 {% include "includes/notifications.html" %}
 
@@ -110,7 +58,7 @@
 
 {% endblock content %}
 
-</main>
+
 
 <footer>
     <div class="footer-wrappper footer-bg">
@@ -216,6 +164,7 @@
 <!-- JS here -->
 <script src="{% static 'assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
 <!-- Jquery, Popper, Bootstrap -->
+
 <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
 <script src="{% static 'assets/js/popper.min.js' %}"></script>
 <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>

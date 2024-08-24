@@ -15,7 +15,7 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
 
     path('', include('services.urls', namespace='services')),
-    path('client/', include('clients.urls', namespace='clients')),
+    path('clients/', include('clients.urls', namespace='clients')),
 ]
 
 urlpatterns += router.urls

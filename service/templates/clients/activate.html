@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<div class="container text-center" data-animation="fadeInLeft" data-delay="0.4s">
+    <button type="submit" class="btn btn1 " id="activate-btn">Активувати</button>
+</div>
+<input type="hidden" id="uid" name="uid" value="{{ uid }}">
+<input type="hidden" id="token" name="token" value="{{ token }}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#activate-btn').on('click', function (event) {
+            var uid = $('#uid').val();
+            var token = $('#token').val();
+            var data = JSON.stringify({uid: uid, token: token});
+            $.ajax({
+                url: '/auth/users/activation/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: data,
+                success: function () {
+                    console.log('ok');
+                },
+                error: function () {
+                    console.log('error');
+                },
+
+            });
+        });
+    });
+</script>
+{% endblock content %}

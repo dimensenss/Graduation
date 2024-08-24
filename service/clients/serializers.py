@@ -11,7 +11,6 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class ClientCreateSerializer(UserCreateSerializer):
-#     class Meta(UserCreateSerializer.Meta):
-#         fields = ('id', 'email', 'password')
-
+class ClientCreateSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        fields = ('id', 'email', 'first_name', 'last_name', 'password')

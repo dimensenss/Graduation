@@ -7293,5 +7293,7 @@ b, sup, sub, u, del {
 
 .main-bg-img{
     background-color: #FFFFFF;
-
+}
+.bg-black{
+    background-color: #000000;
 }

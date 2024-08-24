@@ -5,5 +5,7 @@ from .views import *
 app_name = 'clients'
 
 urlpatterns = [
-    path('check/', ClientViewSet.as_view({'get': 'list'}), name='auth'),
+    path('register/', RegisterClientView.as_view(), name='register'),
+    path('activate/<str:uid>/<str:token>/', ActivateClientView.as_view(), name='activate'),
+
 ]
