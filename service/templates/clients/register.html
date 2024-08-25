@@ -6,49 +6,60 @@
 <div class="container" id="reg_container">
     <div class="d-flex justify-content-center my-3">
         <div class="col-md-6">
-            <form id="registerForm" action="/auth/users/" method="post" content="application/json">
-                <h2 class="text-center">{{ title }}</h2>
+            <form id="registerForm" action="{% url 'clients:register' %}" method="post" content="application/json">
                 {% csrf_token %}
+                {{ form.as_p }}
+<!--                <h2 class="text-center">{{ title }}</h2>-->
+<!--                {% csrf_token %}-->
 
-                <div class="mb-3">
-                    <label for="id_email" class="form-label">Email</label>
-                    <div id="email-error-container" class="alert alert-danger d-none" role="alert">
-                        <div id="email-error-message" class="form-error-1 text-center"></div>
-                    </div>
-                    <input type="email" class="form-control" name="email"
-                           value="{% if form.email.value %}{{ form.email.value }}{% endif %}" id="id_email"
-                           placeholder="Введіть вашу пошту" required>
-                </div>
+<!--                <div class="mb-3">-->
+<!--                    <label for="id_email" class="form-label">Email</label>-->
+<!--                    {% if form.email.errors %}-->
+<!--                   <div class="alert alert-danger alert-dismissible pb-0" role="alert">-->
+<!--                        <div class="form-error-1 text-center">{{ form.email.errors }}</div>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--                    </div>-->
+<!--                    {% endif %}-->
+<!--                    <input type="email" class="form-control" name="email" value = "{% if form.email.value %}{{form.email.value}}{% endif %}" id="id_email"-->
+<!--                           placeholder="Введіть вашу пошту" required>-->
+<!--                </div>-->
 
-                <div class="mb-3">
-                    <label for="id_first_name" class="form-label">Ім'я</label>
-                    <div id="first_name-error-container" class="alert alert-danger d-none" role="alert">
-                        <div id="first_name-error-message" class="form-error-1 text-center"></div>
-                    </div>
-                    <input type="text" class="form-control" name="first_name"
-                           value="{% if form.first_name.value %}{{ form.first_name.value }}{% endif %}"
-                           id="id_first_name" placeholder="Введіть ваше ім'я">
-                </div>
+<!--                <div class="mb-3">-->
+<!--                    <label for="id_first_name" class="form-label">Ім'я</label>-->
+<!--                    {% if form.first_name.errors %}-->
+<!--                    <div class="alert alert-danger alert-dismissible pb-0" role="alert">-->
+<!--                        <span class="form-error-1 text-center">{{ form.first_name.errors }}</span>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--                    </div>-->
+<!--                    {% endif %}-->
+<!--                    <input type="text" class="form-control" name="first_name" value = "{% if form.first_name.value %} {{form.first_name.value}} {% endif %}" id="id_first_name"-->
+<!--                           placeholder="Введіть ваше ім'я">-->
+<!--                </div>-->
 
-                <div class="mb-3">
-                    <label for="id_last_name" class="form-label">Прізвище</label>
-                    <div id="last_name-error-container" class="alert alert-danger d-none" role="alert">
-                        <div id="last_name-error-message" class="form-error-1 text-center"></div>
-                    </div>
-                    <input type="text" class="form-control" name="last_name"
-                           value="{% if form.last_name.value %}{{ form.last_name.value }}{% endif %}" id="id_last_name"
-                           placeholder="Введіть ваше прізвище">
-                </div>
 
-                <div class="mb-3">
-                    <label for="id_password" class="form-label">Введіть пароль</label>
-                    <div id="password-error-container" class="alert alert-danger d-none" role="alert">
-                        <div id="password-error-message" class="form-error-1 text-center"></div>
-                    </div>
-                    <input type="password" class="form-control" name="password" id="id_password"
-                           placeholder="Введіть пароль" required>
-                </div>
+<!--                <div class="mb-3">-->
+<!--                <label for="id_last_name" class="form-label">Прізвище</label>-->
+<!--                    {% if form.last_name.errors %}-->
+<!--                    <div class="alert alert-danger alert-dismissible pb-0" role="alert">-->
+<!--                        <span class="form-error-1 text-center">{{ form.last_name.errors }}</span>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--                    </div>-->
+<!--                    {% endif %}-->
+<!--                    <input type="text" class="form-control" name="last_name" value = "{% if form.last_name.value %} {{form.last_name.value}} {% endif %}" id="id_last_name"-->
+<!--                           placeholder="Введіть ваше прізвище">-->
+<!--                </div>-->
 
+<!--                <div class="mb-3">-->
+<!--                    <label for="id_password" class="form-label">Введіть пароль</label>-->
+<!--                    {% if form.password.errors %}-->
+<!--                   <div class="alert alert-danger alert-dismissible pb-0" role="alert">-->
+<!--                        <div class="form-error-1 text-center">{{ form.password.errors }}</div>-->
+<!--                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--                    </div>-->
+<!--                    {% endif %}-->
+<!--                    <input type="password" class="form-control" name="password" id="id_password"-->
+<!--                           placeholder="Введіть пароль" required>-->
+<!--                </div>-->
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="custom-btn btn-1">Регістрація</button>
                     <button class="gsi-material-button">
@@ -76,56 +87,5 @@
         </div>
     </div>
 </div>
-<div id="reg_success_message" class="container d-none" role="alert">
-                <div id="reg_success_text" class="text-center" data-animation="fadeInLeft" data-delay="0.5s"></div>
-            </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script>
-$(document).ready(function () {
-    $('#registerForm').on('submit', function (event) {
-        event.preventDefault(); // Предотвращаем стандартное поведение формы
-        var formData = $(this).serializeArray();
-
-        // Преобразуем данные формы в объект
-        var formObject = {};
-        $.each(formData, function (index, field) {
-            formObject[field.name] = field.value;
-        });
-
-        // Преобразуем объект в JSON
-        var jsonFormData = JSON.stringify(formObject);
-
-        $.ajax({
-            url: '/auth/users/', // URL для API регистрации
-            type: 'POST',
-            contentType: 'application/json', // Указываем формат данных
-            data: jsonFormData,
-            success: function () {
-                $('#reg_container').empty(); // Очищаем контейнер регистрации
-                $('#reg_success_message').removeClass('d-none'); // Показываем сообщение об успешной регистрации
-                $('#reg_success_text').html('Вам отправлено письмо для активации аккаунта на вашу почту.');
-            },
-            error: function (xhr) {
-                var errors = xhr.responseJSON;
-                console.log('Error:', errors);
-
-                // Отображаем ошибки
-                $('.alert').addClass('d-none'); // Скрываем все ошибки перед отображением новых
-                $.each(errors, function (field, messages) {
-                    var errorContainer = $('#' + field + '-error-container');
-                    var errorMessage = $('#' + field + '-error-message');
-
-                    if (messages) {
-                        errorMessage.html(messages.join('<br>'));
-                        errorContainer.removeClass('d-none');
-                    } else {
-                        errorContainer.addClass('d-none');
-                    }
-                });
-            }
-        });
-    });
-});
-</script>
 {% endblock content %}

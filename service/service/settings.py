@@ -13,8 +13,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = []
-INTERNAL_IPS = ['127.0.0.1', "0.0.0.0:8000"]
-
+INTERNAL_IPS = ['127.0.0.1:8000', "0.0.0.0:8000", '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
@@ -26,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'djoser',
 
@@ -161,18 +161,18 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Замените на хост вашего SMTP-сервера
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'selfedu.platform@gmail.com'
 EMAIL_HOST_PASSWORD = 'fubd gxax qipe whkb'
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
