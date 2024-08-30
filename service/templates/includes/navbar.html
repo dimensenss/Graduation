@@ -10,7 +10,7 @@
                         <!-- Logo -->
                         <div class="col-xl-2 col-lg-2">
                             <div class="logo">
-                                <a href="" class="logo">
+                                <a href="{% url 'services:index' %}" class="logo">
                                     /selfedu<br>
                                     <span class="sub-logo">courses platform</span>
                                 </a>
@@ -33,10 +33,15 @@
                                             <!--                                            </li>-->
                                             <li><a href="contact.html">Співробітництво</a></li>
                                             <!-- Button -->
+                                            {% if not request.user.is_authenticated %}
                                             <li class="button-header margin-left "><a href="{% url 'clients:register' %}" class="btn btn3">Регістрація</a>
                                             </li>
-                                            <li class="button-header"><a href="login.html" class="btn btn3">Вхід</a>
+                                            <li class="button-header"><a href="{% url 'clients:login' %}" class="btn btn3">Вхід</a>
                                             </li>
+                                            {% else %}
+                                            <li class="button-header"><a href="{% url 'clients:logout' %}" class="btn btn3">Вихід</a>
+                                            </li>
+                                            {% endif %}
                                         </ul>
                                     </nav>
                                 </div>

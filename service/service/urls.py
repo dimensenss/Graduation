@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
+from clients.views import SendActivationEmailView
 from services.views import CoursesAPIView
 
 router = SimpleRouter()
@@ -17,6 +18,7 @@ urlpatterns = [
 
     path('', include('services.urls', namespace='services')),
     path('clients/', include('clients.urls', namespace='clients')),
+    path('api/send_activation_email/', SendActivationEmailView.as_view(), name='send_activation_email_api'),
 ]
 
 urlpatterns += router.urls

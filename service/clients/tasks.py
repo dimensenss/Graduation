@@ -10,7 +10,6 @@ from clients.utils import generate_auth_token, User
 
 @shared_task
 def send_activation_email(subject, message, to_email):
-
     msg = EmailMultiAlternatives(subject=subject,
                                  to=[to_email])
     msg.attach_alternative(message, 'text/html')
