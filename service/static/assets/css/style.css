@@ -2043,9 +2043,9 @@ hr {
     right: 0;
     bottom: 0;
     z-index: 999999;
-    -webkit-transition: .6s;
-    -o-transition: .6s;
-    transition: .6s;
+    -webkit-transition: .4s;
+    -o-transition: .4s;
+    transition: .4s;
     margin: 0 auto
 }
 
@@ -4298,7 +4298,7 @@ hr {
 
 .services-area .single-services {
     display: flex;
-    box-shadow: 5px 15px 30px rgba(3, 3, 3, 0.25);
+    box-shadow: 5px 10px 20px rgba(3, 3, 3, 0.25);
     padding: 29px 24px;
     border-radius: 20px;
     background: #fff;
@@ -7356,7 +7356,7 @@ b, sup, sub, u, del {
 /* CSS */
 .button-3 {
   appearance: none;
-  background-color: #2ea44f;
+  background-color: #d200ea;
   border: 1px solid rgba(27, 31, 35, .15);
   border-radius: 6px;
   box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
@@ -7386,23 +7386,23 @@ b, sup, sub, u, del {
 }
 
 .button-3:hover {
-  background-color: #2c974b;
+  background-color: #ee5fff;
 }
 
 .button-3:focus {
-  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  box-shadow: rgb(210, 0, 234) 0 0 0 3px;
   outline: none;
 }
 
 .button-3:disabled {
-  background-color: #94d3a2;
+  background-color: #f1aff8;
   border-color: rgba(27, 31, 35, .1);
   color: rgba(255, 255, 255, .8);
   cursor: default;
 }
 
 .button-3:active {
-  background-color: #298e46;
+  background-color: #a600b9;
   box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
 }
 .form-checkbox {
@@ -7432,4 +7432,33 @@ transition: all 0.3s ease 0s;
 .filters-btn:hover{
     box-shadow: #e1e1e1 0 0 0 1px;
     background: #d9d9d9;
+}
+.catalog__block {
+  --horizontal-scroller-btns-offset: -24px;
+  --horizontal-scroller-btn-icon-size: 24px;
+  --horizontal-scroller-btn-padding: 18px;
+    padding-bottom: 20px;
+}
+.course-card{
+  box-shadow: 5px 10px 20px rgba(3, 3, 3, 0.25);
+  padding: 29px 24px;
+  border-radius: 20px;
+  background: #fff;
+  min-height: 210px;
+  min-width: 320px;
+    margin-bottom: 10px;
+}
+
+.custom-prev-icon, .custom-next-icon {
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+}
+
+.custom-prev-icon {
+    background-image: url(../img/elements/free-icon-left-arrow-254427.png);
+}
+
+.custom-next-icon {
+    background-image: url(../img/elements/free-icon-arrow-right-1549612.png);
 }

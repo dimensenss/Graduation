@@ -7,6 +7,7 @@ from rest_framework.routers import SimpleRouter
 from clients.views import SendActivationEmailView
 from services.views import CoursesAPIView
 from django.urls import include, path
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 router = SimpleRouter()
 router.register('courses', CoursesAPIView)
@@ -22,7 +23,7 @@ urlpatterns = [
     path('catalog/', include('catalog.urls', namespace='catalog')),
     path('api/send_activation_email/', SendActivationEmailView.as_view(), name='send_activation_email_api'),
 
-]
+]+ debug_toolbar_urls()
 
 urlpatterns += router.urls
 if settings.DEBUG:

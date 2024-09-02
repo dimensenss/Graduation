@@ -10,7 +10,7 @@ class CatalogMainView(ListView):
     context_object_name = 'courses'
 
     def get_queryset(self):
-        return Course.objects.all()
+        return Course.objects.all().select_related('owner').order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

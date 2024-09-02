@@ -1,4 +1,5 @@
 import os
+import socket
 from datetime import timedelta
 from pathlib import Path
 import dotenv
@@ -15,9 +16,16 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = []
-INTERNAL_IPS = ['127.0.0.1:8000', "0.0.0.0:8000", '127.0.0.1']
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = ['127.0.0.1', 'localhost']
+INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 # Application definition
 
+
+
+DEBUG_TOOLBAR_CONFIG = {
+     'SHOW_TOOLBAR_CALLBACK': lambda request: bool(request.headers.get('x-requested-with') != 'XMLHttpRequest'),
+}
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,6 +39,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
     'django.contrib.staticfiles',
+    "debug_toolbar",
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -52,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+"debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 SITE_ID = 1
 ROOT_URLCONF = 'service.urls'
