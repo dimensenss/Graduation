@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Mulish:wght@400;500;600;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
 .white-bg {
     background: #ffffff
 }
@@ -4300,18 +4301,22 @@ hr {
     box-shadow: 5px 15px 30px rgba(3, 3, 3, 0.25);
     padding: 29px 24px;
     border-radius: 20px;
-    background: #fff
+    background: #fff;
+    min-height: 170px;
+
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .services-area .single-services {
-        padding: 18px 14px
+        padding: 18px 14px;
+        min-height: 170px;
     }
 }
 
 @media (max-width: 575px) {
     .services-area .single-services {
-        padding: 18px 14px
+        padding: 18px 14px;
+        min-height: 100px;
     }
 }
 
@@ -4788,8 +4793,8 @@ hr {
 }
 
 .blog_area a {
-    color: "Josefin Sans", sans-serif; !important
-    text-decoration: none;
+    color: "Josefin Sans", sans-serif;
+!important text-decoration: none;
     transition: .4s
 }
 
@@ -7260,6 +7265,7 @@ b, sup, sub, u, del {
 .switch-wrap {
     margin-bottom: 10px
 }
+
 @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
 
 .logo {
@@ -7281,7 +7287,7 @@ b, sup, sub, u, del {
     margin-top: -2px; /* Максимально уменьшенный отступ сверху */
 }
 
-.preloader-logo{
+.preloader-logo {
     margin-top: 10px;
     font-family: 'Courier Prime', monospace;
     font-size: 18px;
@@ -7291,9 +7297,139 @@ b, sup, sub, u, del {
     letter-spacing: 1.2px; /* Межбуквенный интервал */
 }
 
-.main-bg-img{
+.main-bg-img {
     background-color: #FFFFFF;
 }
-.bg-black{
+
+.bg-black {
     background-color: #000000;
+}
+
+.form-error-1 {
+    padding: 5px;
+}
+
+.form-control {
+    font-size: 1em !important;
+}
+
+.main-content {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.catalog{
+    margin: 0 auto;
+  width: 100%;
+  max-width: 1022px;
+  padding: 32px 0 64px;
+}
+.catalog-search-bar{
+    margin: 0 0 32px;
+}
+.catalog-search-form {
+  padding: 14px 16px;
+  margin: 0;
+  border-radius: 6px;
+  background-color: #f3f4f6;
+}
+.search-input{
+    height: 42px;
+  font-size: 16px;
+  letter-spacing: .3px;
+  border-color: #eaecf0;
+  background-color: #fff;
+  background-size: 16px;
+  background-position: 8px center;
+}
+.search-form__input-wrapper {
+  flex: 1;
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+
+
+
+/* CSS */
+.button-3 {
+  appearance: none;
+  background-color: #2ea44f;
+  border: 1px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+    height: 42px;
+}
+
+.button-3:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+.button-3:hover {
+  background-color: #2c974b;
+}
+
+.button-3:focus {
+  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  outline: none;
+}
+
+.button-3:disabled {
+  background-color: #94d3a2;
+  border-color: rgba(27, 31, 35, .1);
+  color: rgba(255, 255, 255, .8);
+  cursor: default;
+}
+
+.button-3:active {
+  background-color: #298e46;
+  box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+}
+.form-checkbox {
+  display: inline-block;
+  margin: 0;
+    margin-right: 0px;
+  padding: 8px 8px 6px 0;
+  font-size: 14px;
+  letter-spacing: .25px;
+  line-height: 22px;
+  color: #222;
+}
+
+.filters-btn{
+  margin-right: -2px;
+  align-items: center;
+  padding: 8px;
+  font-size: 16px;
+  color: #424242;
+  background: 0 0;
+transition: all 0.3s ease 0s;
+  --focus-outline-color: rgba(100, 200, 255, 0.3);
+    border-radius: 4px;
+    border: none;
+    height: 42px;
+}
+.filters-btn:hover{
+    box-shadow: #e1e1e1 0 0 0 1px;
+    background: #d9d9d9;
 }

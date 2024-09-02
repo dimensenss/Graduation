@@ -3,6 +3,8 @@ from datetime import timedelta
 from pathlib import Path
 import dotenv
 
+import service
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,8 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = []
-INTERNAL_IPS = ['127.0.0.1', "0.0.0.0:8000"]
-
+INTERNAL_IPS = ['127.0.0.1:8000', "0.0.0.0:8000", '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
@@ -23,14 +24,23 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'djoser',
+    'django_filters',
 
     'clients',
     'services',
+    'catalog',
 ]
 
 MIDDLEWARE = [
@@ -41,8 +51,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
-
+SITE_ID = 1
 ROOT_URLCONF = 'service.urls'
 
 TEMPLATES = [
@@ -74,14 +85,20 @@ DATABASES = {
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'HOST': 'localhost',
+    #     'NAME': 'docker_db',
+    #     'USER': 'docker_db_user',
+    #     'PASSWORD': os.getenv('PASSWORD'),
+    # }
+
 }
 
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'clients.authentication.EmailAuthBackend',
-#     'allauth.account.auth_backends.AuthenticationBackend'
-# ]
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -122,6 +139,23 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates/'),
 )
 AUTH_USER_MODEL = 'clients.Client'
+
+SOCIALACCOUNT_ADAPTER = 'clients.utils.GooglelAccountAdapter'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+LOGIN_URL = '/clients/login/'
+LOGIN_REDIRECT_URL = '/clients/profile/'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
 # Основные настройки медиа-файлов
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -161,18 +195,18 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Замените на хост вашего SMTP-сервера
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'selfedu.platform@gmail.com'
 EMAIL_HOST_PASSWORD = 'fubd gxax qipe whkb'
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),

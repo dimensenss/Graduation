@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load account %}
+{% load socialaccount %}
+
+
+{% block content %}
+    <div class="container" id="reg_container">
+        <div class="d-flex justify-content-center my-3">
+            <div class="col-md-6">
+
+                <form id="loginForm" action="{% url 'clients:login' %}" method="post" content="application/json">
+
+                    {% csrf_token %}
+
+                    {% if request.GET.next %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {% endif %}
+                
+                    <label for="id_username" class="form-label">Email:</label>
+                    {% if form.username.errors %}
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                            <div class="form-error-1 text-center">{{ form.username.errors }}</div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                    <input type="text" name="username"
+                           value="{% if form.username.value %}{{ form.username.value }}{% endif %}" autofocus=""
+                           autocapitalize="none"
+                           autocomplete="username" maxlength="254" required="" id="id_username" class="form-control">
+
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Введіть пароль</label>
+                        {% if form.password.errors %}
+                            <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                                <div class="form-error-1 text-center">{{ form.password.errors }}</div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+                        <input type="password" name="password" autocomplete="current-password" required=""
+                               id="id_password" class="form-control">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="custom-btn btn-1">Вхід</button>
+                    </div>
+                </form>
+                <a href="{% provider_login_url 'google' %}" class="btn">Увійти з Google</a>
+            <a href="{% url 'account_reset_password' %}" class="text-dark">Забули пароль?</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

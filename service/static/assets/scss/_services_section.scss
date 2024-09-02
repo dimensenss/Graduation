@@ -1,5 +1,6 @@
 .services-area{
     margin-top: -100px;
+
     &.services-area2{
         margin-top: 0;
     }
@@ -9,6 +10,8 @@
         padding: 29px 24px;
         border-radius: 20px;
         background: #fff;
+
+
         @media #{$lg}{
             padding: 18px 14px;
         }

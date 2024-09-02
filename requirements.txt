@@ -8,4 +8,7 @@ django-redis==5.2.0
 python-dotenv
 djangorestframework-simplejwt
 djoser==2.2.3
-social-auth-app-django
+django-allauth
+django-filter
+
+
