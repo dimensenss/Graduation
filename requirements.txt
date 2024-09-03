@@ -11,5 +11,9 @@ djoser==2.2.3
 django-allauth
 django-filter
 django-debug-toolbar
+django-mptt
+django-mptt-admin
+
+
 
 

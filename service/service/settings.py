@@ -22,9 +22,8 @@ INTERNAL_IPS += [".".join(ip.split(".")[:-1] + ["1"]) for ip in ips]
 # Application definition
 
 
-
 DEBUG_TOOLBAR_CONFIG = {
-     'SHOW_TOOLBAR_CALLBACK': lambda request: bool(request.headers.get('x-requested-with') != 'XMLHttpRequest'),
+    'SHOW_TOOLBAR_CALLBACK': lambda request: bool(request.headers.get('x-requested-with') != 'XMLHttpRequest'),
 }
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,6 +39,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'django.contrib.staticfiles',
     "debug_toolbar",
+    'mptt',
+    'django_mptt_admin',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
-"debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 SITE_ID = 1
 ROOT_URLCONF = 'service.urls'

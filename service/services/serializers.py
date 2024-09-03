@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from services.models import Course, CourseSubcategory, Lesson
+from services.models import Course, CourseModules, Lesson
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class SubCategoriesSerializer(serializers.ModelSerializer):
     lessons = LessonSerializer(many=True, read_only=True)
 
     class Meta:
-        model = CourseSubcategory
+        model = CourseModules
         fields = ('id', 'title', 'lessons')
 
 

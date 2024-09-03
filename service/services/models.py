@@ -1,11 +1,15 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from mptt.fields import TreeForeignKey
+from mptt.models import MPTTModel
+
 from clients.models import Client
 from services.tasks import set_sub_price
 
 
 class Course(models.Model):
     owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='courses')
+    cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     course_name = models.CharField(max_length=255)
     full_price = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,8 +29,8 @@ class Course(models.Model):
                 set_sub_price.delay(sub.id)
 
 
-class CourseSubcategory(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='subcategories')
+class CourseModules(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     order = models.PositiveIntegerField(default=0)  # Порядок отображения
@@ -40,7 +44,7 @@ class CourseSubcategory(models.Model):
 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons', null=True, blank=True)
-    course_subcategory = models.ForeignKey(CourseSubcategory, on_delete=models.CASCADE, related_name='lessons')
+    course_module = models.ForeignKey(CourseModules, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True, null=True)  # Основной текст урока
     video_url = models.URLField(blank=True, null=True)  # URL для видео
@@ -112,4 +116,28 @@ class Subscription(models.Model):
     # def delete(self, **kwargs):
     #     cache.delete(settings.PRICE_CACHE_NAME)
     #     super().delete(**kwargs)
+
+class Category(MPTTModel):
+    title = models.CharField(max_length=255, verbose_name='Назва категорії')
+    slug = models.SlugField(max_length=255, verbose_name='URL', unique=True)
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        db_index=True,
+        related_name='children',
+        verbose_name='Батьківська категорія'
+    )
+
+    class MPTTMeta:
+        order_insertion_by = ('title',)
+
+    class Meta:
+        verbose_name = 'Категорія'
+        verbose_name_plural = 'Категорії'
+
+    def __str__(self):
+        return ''.join([ancestor.title + ' > ' for ancestor in self.get_ancestors(include_self=True)])[:-3]
+
 

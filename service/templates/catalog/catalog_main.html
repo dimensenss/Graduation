@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
-{% load course_filters %}
+{% load static course_filters %}
 
 {% block content %}
     <div class="catalog">
@@ -58,39 +57,33 @@
         </div>
 
 
-        <div id="carouselExample" class="carousel carousel-dark slide ">
-            <div class="carousel-inner">
-        {% for group in courses|group_by:2 %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center gap-3 catalog__block">
-                {% for course in group %}
-                <div class="card course-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ course.course_name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ course.owner }}</h6>
-                        <p class="card-text">{{ course.full_price }}</p>
-                        <a href="#" class="card-link">Подробнее</a>
-                    </div>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+
+            {% for cat in cats %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if forloop.first %}active{% endif %}" id="pills-{{ cat.id }}-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pills-{{ cat.id }}"
+                            data-cat-id='{{ cat.id }}' type="button" role="tab"
+                            aria-controls="pills-{{ cat.id }}-controls"
+                            aria-selected="true">
+                        {{ cat.title }}
+                    </button>
+                </li>
+            {% endfor %}
+
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            {% for cat in cats %}
+                <div class="tab-pane fade show {% if forloop.first %}active{% endif %} load-tab" id="pills-{{ cat.id }}"
+                     role="tabpanel"
+                     aria-labelledby="pills-{{ cat.id }}-tab"
+                     tabindex="0">
+                    {% include 'catalog/includes/courses_slider_placeholder.html' %}
                 </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-            <button class="carousel-control-prev justify-content-start" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="prev">
-                <span class="custom-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next justify-content-end" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="next">
-                <span class="custom-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+            {% endfor %}
         </div>
 
 
     </div>
-
-
 {% endblock content %}

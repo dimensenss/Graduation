@@ -1,16 +1,18 @@
+from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.template.loader import render_to_string
+from django.views.generic import ListView, TemplateView
 
-from services.models import Course
+from services.models import Course, Category
 
 
 class CatalogMainView(ListView):
     template_name = 'catalog/catalog_main.html'
-    model = Course
-    context_object_name = 'courses'
+    model = Category
+    context_object_name = 'cats'
 
     def get_queryset(self):
-        return Course.objects.all().select_related('owner').order_by('-created_at')
+        return Category.objects.filter(parent__title='Promo').only('id', 'title')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,3 +45,13 @@ class SearchView(ListView):
     #
     #     return dict(list(context.items()) + list(c_def.items()))
 
+class GetCoursesView(TemplateView):
+    template_name = 'catalog/includes/courses_slider.html'
+
+    def get(self, request, *args, **kwargs):
+        cat_id = request.GET.get('cat_id')
+        courses = Course.objects.filter(cat_id=cat_id).select_related('owner').order_by('-created_at')
+
+        context = {'courses': courses, 'cat_id': cat_id}
+        html = render_to_string(self.template_name, context)
+        return JsonResponse(html, safe=False)

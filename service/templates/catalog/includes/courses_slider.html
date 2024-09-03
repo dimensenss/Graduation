@@ -1,0 +1,35 @@
+{% load static course_filters %}
+
+
+<div id="carousel-{{ cat_id }}" class="carousel carousel-dark slide ">
+    <div class="carousel-inner">
+        {% for group in courses|group_by:6 %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center gap-3 catalog__block">
+                    {% for course in group %}
+                        <div class="card course-card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.course_name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">{{ course.owner }}</h6>
+                                <p class="card-text">{{ course.full_price }}</p>
+                                <a href="#" class="card-link">Подробнее</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev justify-content-start" type="button"
+            data-bs-target="#carousel-{{ cat_id }}"
+            data-bs-slide="prev">
+        <span class="custom-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next justify-content-end" type="button"
+            data-bs-target="#carousel-{{ cat_id }}"
+            data-bs-slide="next">
+        <span class="custom-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
