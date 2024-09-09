@@ -6,12 +6,12 @@
         <div class="catalog-search-bar">
             <div class="d-flex flex-row justify-content-center align-items-center catalog-search-form">
                 <form method="get" class=" mt-1 search-form d-flex align-items-center flex-fill"
-                      action="{% url 'catalog:search' %}">
+                      action="{% url 'catalog:search-catalog' %}" id="main-search-form">
 
                     <div class="input-group flex-fill me-3">
                         <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" name="search" placeholder="Пошук..." class="form-control search-input"
-                               value="{{ request.GET.search }}">
+                        <input type="text" name="q" placeholder="Пошук..." class="form-control search-input"
+                               value="{{ request.GET.q }}">
                     </div>
 
                     <div class="d-none d-md-flex">
@@ -86,4 +86,38 @@
 
 
     </div>
+    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+    var loadedTabs = {};
+
+    function loadTabContent(cat_id) {
+    if (!loadedTabs[cat_id]) {
+        setTimeout(function() {
+            $.ajax({
+                type: 'GET',
+                url: '/catalog/api/v1/get-courses/',
+                data: {
+                    cat_id: cat_id,
+                },
+                success: function (data) {
+                    $('#pills-' + cat_id).html(data);
+                    loadedTabs[cat_id] = true;
+                }
+            });
+        }, 300);
+    }
+}
+
+    var activeTabCatId = parseInt($('button.nav-link.active').data('cat-id'), 10);
+    loadTabContent(activeTabCatId);
+
+    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+        var cat_id = $(e.target).data('cat-id'); // Получаем id категории
+        loadTabContent(cat_id);
+    });
+});
+</script>
+
+
 {% endblock content %}

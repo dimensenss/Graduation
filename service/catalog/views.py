@@ -1,8 +1,12 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.views import View
 from django.views.generic import ListView, TemplateView
+from django_filters.views import FilterView
+from rest_framework.views import APIView
 
+from catalog.utils import CourseFilter
 from services.models import Course, Category
 
 
@@ -16,34 +20,35 @@ class CatalogMainView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filter'] = CourseFilter(self.request.GET, queryset=Course.objects.all())
         return context
 
-class SearchView(ListView):
-    queryset = Course.objects.all()
-    template_name = 'catalog/catalog.html'
+class CatalogListView(ListView):
+    template_name = 'catalog/catalog_list.html'
+    model = Course
     context_object_name = 'courses'
-    allow_empty = True
-    courses_filter = None
 
-    # def get_template_names(self):
-    #     if self.request.htmx:
-    #         return 'includes/products_list.html'
-    #     return self.template_name
+    def get_queryset(self):
+        courses = Course.objects.all().select_related('owner')
+        filtered_qs = CourseFilter(self.request.GET, queryset=courses)
+        return filtered_qs.qs
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset().annotate(
-    #         sneakers_first_image=F("first_image__image"))
-    #     self.sneakers_filter = SneakersFilter(self.request.GET, queryset=queryset)
-    #     queryset = self.sneakers_filter.qs
-    #
-    #     return queryset
-    #
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     c_def = self.get_user_context(filter=self.sneakers_filter)
-    #     context['is_search_page'] = True
-    #
-    #     return dict(list(context.items()) + list(c_def.items()))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = CourseFilter(self.request.GET, queryset=self.get_queryset())
+        return context
+
+class SearchView(TemplateView):
+    template_name = 'catalog/includes/courses_list.html'
+    def get(self, request, *args, **kwargs):
+        courses = Course.objects.all().select_related('owner')
+        filtered_qs = CourseFilter(self.request.GET, queryset=courses)
+
+        context = {'courses': filtered_qs.qs}
+        html = render_to_string(self.template_name, context)
+        return JsonResponse(html, safe=False)
+
+
 
 class GetCoursesView(TemplateView):
     template_name = 'catalog/includes/courses_slider.html'

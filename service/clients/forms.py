@@ -37,7 +37,7 @@ class LoginUserForm(AuthenticationForm):
 
     def clean_username(self):
         email = self.cleaned_data['username']
-        # validate_username(email)
+        validate_username(email)
         return email
 
     def confirm_login_allowed(self, user):

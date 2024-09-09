@@ -457,32 +457,69 @@ $(document).ready(function ($) {
     }
 });
 
+
+// $(document).ready(function() {
+//     $('#catalog-search-form').on('submit', function(e) {
+//         e.preventDefault();
+//         let formData = $(this).serialize();
+//         $.ajax({
+//                 type: 'GET',
+//                 url: '/catalog/api/v1/search/',
+//                 data: formData,
+//                 success: function (data) {
+//                    console.log(data);
+//                 }
+//             });
+//     });
+// });
 $(document).ready(function () {
-    var loadedTabs = {};
+    const form = $('#catalog-search-form');
 
-    function loadTabContent(cat_id) {
-    if (!loadedTabs[cat_id]) {
-        setTimeout(function() {
-            $.ajax({
-                type: 'GET',
-                url: '/catalog/api/v1/get-courses/',
-                data: {
-                    cat_id: cat_id,
-                },
-                success: function (data) {
-                    $('#pills-' + cat_id).html(data);
-                    loadedTabs[cat_id] = true;
-                }
-            });
-        }, 300);
-    }
-}
+    form.on('change', function (event) {
+        event.preventDefault();
 
-    var activeTabCatId = parseInt($('button.nav-link.active').data('cat-id'), 10);
-    loadTabContent(activeTabCatId);
+        const formData = form.serializeArray();
+        const params = new URLSearchParams(window.location.search);
 
-    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
-        var cat_id = $(e.target).data('cat-id'); // Получаем id категории
-        loadTabContent(cat_id);
+        // Обновляем параметры URL, явно учитывая состояние чекбоксов
+        form.find('input[type="checkbox"]').each(function () {
+            const checkbox = $(this);
+            const name = checkbox.attr('name');
+            if (!checkbox.is(':checked')) {
+                params.delete(name); // Удаляем из параметров, если чекбокс не отмечен
+            } else {
+                params.set(name, checkbox.val()); // Добавляем в параметры, если чекбокс отмечен
+            }
+        });
+
+        // Обновляем остальные параметры формы (например, текстовые поля)
+        formData.forEach(function (item) {
+            if (item.value) {
+                params.set(item.name, item.value);
+            } else {
+                params.delete(item.name);
+            }
+        });
+
+        // Обновляем строку запроса в URL без перезагрузки страницы
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.history.replaceState({}, '', newUrl);
+        console.log(params);
+        // Отправляем AJAX запрос
+        $.ajax({
+            url: '/catalog/api/v1/search/',
+            type: 'GET',
+            data: params.toString(), // Передаем параметры URL в запросе
+            dataType: 'json',
+            success: function (data) {
+                const coursesList = $('.courses-list');
+                coursesList.empty();
+                coursesList.html(data); // Обновляем контент
+            },
+            error: function (xhr, status, error) {
+                console.error('Ошибка:', error);
+            }
+        });
     });
 });
+

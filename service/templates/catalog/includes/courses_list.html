@@ -1,0 +1,11 @@
+{% load static %}
+{% for course in courses %}
+    <div class="card course-card">
+        <div class="card-body">
+            <h5 class="card-title">{{ course.course_name }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ course.owner }}</h6>
+            <p class="card-text">{{ course.full_price }}</p>
+            <a href="#" class="card-link">Подробнее</a>
+        </div>
+    </div>
+{% endfor %}

@@ -1,5 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import models, transaction
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
@@ -8,10 +8,18 @@ from services.tasks import set_sub_price
 
 
 class Course(models.Model):
+    LANG_CHOICES = (
+
+        ('uk', 'Українська'),
+        ('en', 'Англійська'),
+    )
     owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='courses')
     cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     course_name = models.CharField(max_length=255)
+    description = models.CharField(max_length=1024, blank=True, null=True)
     full_price = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    language = models.CharField(choices=LANG_CHOICES, max_length=255)
+    have_certificate = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -117,6 +125,7 @@ class Subscription(models.Model):
     #     cache.delete(settings.PRICE_CACHE_NAME)
     #     super().delete(**kwargs)
 
+
 class Category(MPTTModel):
     title = models.CharField(max_length=255, verbose_name='Назва категорії')
     slug = models.SlugField(max_length=255, verbose_name='URL', unique=True)
@@ -139,5 +148,3 @@ class Category(MPTTModel):
 
     def __str__(self):
         return ''.join([ancestor.title + ' > ' for ancestor in self.get_ancestors(include_self=True)])[:-3]
-
-

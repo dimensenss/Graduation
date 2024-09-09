@@ -2,9 +2,9 @@
 
 <header>
     <!-- Header Start -->
-    <div class="header-area bg-dark">
+    <div class="header-area bg-dark fixed-top">
         <div class="main-header ">
-            <div class="header-bottom  header-sticky">
+            <div class="header-bottom  ">
                 <div class="container-fluid">
                     <div class="row align-items-center">
                         <!-- Logo -->
@@ -12,7 +12,7 @@
                             <div class="logo">
                                 <a href="{% url 'services:index' %}" class="logo">
                                     /selfedu<br>
-                                    <span class="sub-logo">courses platform</span>
+
                                 </a>
                             </div>
                         </div>
@@ -33,6 +33,7 @@
                                             <!--                                            </li>-->
                                             <li><a href="contact.html">Співробітництво</a></li>
                                             <!-- Button -->
+
                                             {% if not request.user.is_authenticated %}
                                                 <li class="button-header margin-left "><a
                                                         href="{% url 'clients:register' %}"

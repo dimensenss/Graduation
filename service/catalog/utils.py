@@ -1,0 +1,41 @@
+import django_filters
+from django import forms
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import Value, Q
+
+from services.models import Course
+
+
+class CourseFilter(django_filters.FilterSet):
+    q = django_filters.CharFilter(method='name_desc_filter', label='Назва складається з')
+    price__gte = django_filters.NumberFilter(field_name='full_price', lookup_expr='gte', label='Ціна від:')
+    price__lte = django_filters.NumberFilter(field_name='full_price', lookup_expr='lte', label='Ціна до:')
+    have_certificate = django_filters.BooleanFilter(method='have_certificate_filter', widget=forms.CheckboxInput,
+                                                    label='З сертифікатом')
+    is_free = django_filters.BooleanFilter(method='is_free_filter', widget=forms.CheckboxInput,
+                                           label='Безкоштовні курси')
+    language = django_filters.ChoiceFilter(choices=Course.LANG_CHOICES, label='Мова', empty_label='Будь-яка мова')
+
+    def name_desc_filter(self, queryset, name, value):
+        if value.isdigit() and len(value) <= 5:
+            return queryset.filter(id=value)
+
+        vector = SearchVector('course_name', 'description')
+        query = SearchQuery(value)
+        normalization = Value(2).bitor(Value(4))
+        return queryset.annotate(rank=SearchRank(vector, query, normalization=normalization)).filter(
+            rank__gt=0).order_by("-rank")
+
+    def is_free_filter(self, queryset, name, value):
+        if value:
+            return queryset.filter(full_price=0)
+        return queryset
+
+    def have_certificate_filter(self, queryset, name, value):
+        if value:
+            return queryset.filter(have_certificate=True)
+        return queryset
+
+    class Meta:
+        model = Course
+        fields = []
