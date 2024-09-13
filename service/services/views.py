@@ -1,15 +1,21 @@
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import ListView
-from rest_framework.viewsets import ModelViewSet
+
+from django.views.generic import ListView, DetailView
 
 from services.models import Course
-from services.serializers import CourseSerializer
 
 
-class CoursesAPIView(ModelViewSet):
-    serializer_class = CourseSerializer
-    queryset = Course.objects.all()
+
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'services/course_detail.html'
+    context_object_name = 'course'
+
+    def get_object(self, queryset=None):
+        return Course.objects.get(pk=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class IndexView(ListView):
