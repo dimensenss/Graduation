@@ -2,10 +2,17 @@
 {% for course in courses %}
     <div class="card course-card">
         <div class="card-body">
-            <h5 class="card-title">{{ course.course_name }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{ course.owner }}</h6>
-            <p class="card-text">{{ course.full_price }}</p>
-            <a href="#" class="card-link">Подробнее</a>
+            <div class="d-flex">
+                <!-- Изображение -->
+                <img src="{{ course.preview.url }}" alt="" class="img-fluid me-3 rounded card-image">
+
+                <div>
+                    <h5 class="card-title">{{ course.course_name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ course.owner }}</h6>
+                    <p class="card-text">{{ course.full_price }}</p>
+                    <a href="#" class="card-link">Подробнее</a>
+                </div>
+            </div>
         </div>
     </div>
 {% endfor %}

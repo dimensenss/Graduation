@@ -13,6 +13,7 @@ django-filter
 django-debug-toolbar
 django-mptt
 django-mptt-admin
+Pillow
 
 
 

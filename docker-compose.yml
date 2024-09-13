@@ -6,6 +6,7 @@ services:
       - "8000:8000"
     volumes:
       - ./service:/service
+      - ./media:/service/media
     environment:
       - DB_HOST=database
       - DB_NAME=docker_db

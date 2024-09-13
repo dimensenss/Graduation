@@ -15,6 +15,11 @@ class CourseFilter(django_filters.FilterSet):
     is_free = django_filters.BooleanFilter(method='is_free_filter', widget=forms.CheckboxInput,
                                            label='Безкоштовні курси')
     language = django_filters.ChoiceFilter(choices=Course.LANG_CHOICES, label='Мова', empty_label='Будь-яка мова')
+    difficulty = django_filters.ChoiceFilter(
+        choices=Course.DIFFICULTY_CHOICES,
+        label='Рівень',
+        empty_label='Все'  # Показывать "Все" как опцию по умолчанию
+    )
 
     def name_desc_filter(self, queryset, name, value):
         if value.isdigit() and len(value) <= 5:

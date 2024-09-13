@@ -5,12 +5,9 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 
 from clients.views import SendActivationEmailView
-from services.views import CoursesAPIView
+
 from django.urls import include, path
 from debug_toolbar.toolbar import debug_toolbar_urls
-
-router = SimpleRouter()
-router.register('courses', CoursesAPIView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,7 +22,7 @@ urlpatterns = [
 
 ]+ debug_toolbar_urls()
 
-urlpatterns += router.urls
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

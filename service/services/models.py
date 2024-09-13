@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
+from django.urls import reverse_lazy
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 
@@ -9,19 +10,29 @@ from services.tasks import set_sub_price
 
 class Course(models.Model):
     LANG_CHOICES = (
-
         ('uk', 'Українська'),
         ('en', 'Англійська'),
     )
+    DIFFICULTY_CHOICES = (
+        ('beginner', 'Починаючий'),
+        ('middle', 'Середній'),
+        ('expert', 'Продвинутий'),
+    )
     owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='courses')
-    cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     course_name = models.CharField(max_length=255)
+    slug=models.SlugField(max_length=255, unique=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
+    cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     full_price = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     language = models.CharField(choices=LANG_CHOICES, max_length=255)
+    difficulty = models.CharField(choices=DIFFICULTY_CHOICES, max_length=255, null=True)
     have_certificate = models.BooleanField(default=False)
+    preview = models.ImageField(upload_to='course_previews/%Y/%m/%d/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse_lazy('services:course_detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.course_name
@@ -35,6 +46,7 @@ class Course(models.Model):
         if self.full_price != self.__full_price:
             for sub in self.subscriptions.all():
                 set_sub_price.delay(sub.id)
+
 
 
 class CourseModules(models.Model):
