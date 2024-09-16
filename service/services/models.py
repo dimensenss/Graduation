@@ -20,7 +20,7 @@ class Course(models.Model):
     )
     owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='courses')
     course_name = models.CharField(max_length=255)
-    slug=models.SlugField(max_length=255, unique=True)
+    # slug=models.SlugField(max_length=255, unique=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
     cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     full_price = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
@@ -30,6 +30,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='course_previews/%Y/%m/%d/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_published = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse_lazy('services:course_detail', kwargs={'pk': self.pk})

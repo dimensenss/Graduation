@@ -26,7 +26,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: bool(request.headers.get('x-requested-with') != 'XMLHttpRequest'),
 }
 INSTALLED_APPS = [
-    'django.contrib.admin',
+	'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "debug_toolbar",
     'mptt',
     'django_mptt_admin',
+    'django_recaptcha',
+
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'clients',
     'services',
     'catalog',
+    'teach',
 ]
 
 MIDDLEWARE = [
@@ -167,6 +170,10 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
 # Основные настройки медиа-файлов
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

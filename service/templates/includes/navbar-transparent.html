@@ -22,15 +22,13 @@
                                 <div class="main-menu d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="courses.html">Курси</a></li>
-                                            <li><a href="about.html">Викладання</a></li>
-                                            <!--                                            <li><a href="#">Blog</a>-->
-                                            <!--                                                <ul class="submenu">-->
-                                            <!--                                                    <li><a href="blog.html">Blog</a></li>-->
-                                            <!--                                                    <li><a href="blog_details.html">Blog Details</a></li>-->
-                                            <!--                                                    <li><a href="elements.html">Element</a></li>-->
-                                            <!--                                                </ul>-->
-                                            <!--                                            </li>-->
+                                            <li><a href="{% url 'catalog:catalog' %}">Курси</a></li>
+                                            {% has_courses request.user as user_has_courses %}
+                                            <li>
+                                                <a href="{% if user_has_courses %}{% url 'teach:courses' %}{% else %}{% url 'teach:teach_promo' %}{% endif %}">
+                                                    Викладання
+                                                </a>
+                                            </li>
                                             <li><a href="contact.html">Співробітництво</a></li>
                                             <!-- Button -->
                                             {% if not request.user.is_authenticated %}

@@ -2,5 +2,86 @@
 {% load static %}
 
 {% block content %}
-    {{ course.course_name }}
+    <div class="course-detail-header">
+        <div class="d-flex page-fragment">
+            <div class="d-flex flex-column text-white">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="course-detail-header-title">{{ course.course_name }}</h1>
+                        <div class="course-detail-header-summary">
+                            <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque enim explicabo maiores
+                                nihil non quam quisquam quos suscipit tempora unde! Accusantium consectetur doloremque
+                                ipsam non quae quisquam repellat rerum temporibus!
+                            </div>
+                            <div>Alias assumenda at consectetur consequuntur ea eaque, est explicabo fuga illo iste odio
+                                optio quisquam, quo repellat sunt veritatis vitae. Cum cupiditate itaque laudantium
+                                natus neque quod repellendus sed vero?
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4 text-center ">
+                        <img src="{{ course.preview.url }}" alt="Course Icon" class="img-fluid rounded"
+                             style="height: 200px;">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mt-4">
+                        <div class="d-flex align-items-center mb-2 justify-content-between">
+                        <span class="me-3">
+                            <i class="fa-solid fa-signal"></i> {{ course.get_difficulty_display }}
+                        </span>
+                            <span class="me-3">
+                            <i class="fa-regular fa-clock"></i> 10 часов в неделю
+                                    </span>
+                            {% if course.have_certificate %}
+                                <span>
+                           <i class="fa-solid fa-award"></i> Сертификат selfedu
+                        </span>
+                            {% endif %}
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="me-3">
+                                    <span class="badge bg-warning text-dark">4.9</span>
+                                    <span>5 572 учеников</span>
+                                </div>
+                                <a href="#" class="text-primary">454 відгуки</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="course-detail-main">
+        <div class="page-fragment">
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>Про курс</h3>
+                    <p class="license">✔ Образовательная лицензия № Л035-01233-15/01102936</p>
+                    <p>Курс продолжает линейку курсов "Поколение Python", адресован знающим базовые конструкции и типы
+                        данных языка Python. Знакомит с концепцией объектно-ориентированного программирования.</p>
+                    <ul>
+                        <li>Атрибуты, методы, свойства</li>
+                        <li>Магические методы</li>
+                        <li>Наследование, полиморфизм, декораторы классов</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 price-section">
+                    <div>
+                        <span class="price">5 900 RUB</span>
+                        <span class="old-price">6 900 RUB</span>
+                        <p>При оплате до 16 вересня</p>
+                    </div>
+                    <button class="btn btn-buy btn-lg btn-block">Придбати</button>
+                    <button class="btn btn-outline-success btn-lg btn-block">Спробувати безкоштовно</button>
+                    <p class="mt-3">
+                        <a href="#">Add to Wishlist</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock content %}

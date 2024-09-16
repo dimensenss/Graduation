@@ -7,7 +7,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ('course_name', 'cat', 'full_price','created_at' )
     list_filter = ('created_at', 'updated_at')
     search_fields = ('title', 'description')
-    prepopulated_fields = {'slug': ('course_name',)}
+    # prepopulated_fields = {'slug': ('course_name',)}
 
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseModules)

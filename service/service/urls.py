@@ -18,6 +18,8 @@ urlpatterns = [
     path('', include('services.urls', namespace='services')),
     path('clients/', include('clients.urls', namespace='clients')),
     path('catalog/', include('catalog.urls', namespace='catalog')),
+    path('teach/', include('teach.urls', namespace='teach')),
+
     path('api/send_activation_email/', SendActivationEmailView.as_view(), name='send_activation_email_api'),
 
 ]+ debug_toolbar_urls()

@@ -14,6 +14,7 @@ django-debug-toolbar
 django-mptt
 django-mptt-admin
 Pillow
+django-recaptcha
 
 
 
