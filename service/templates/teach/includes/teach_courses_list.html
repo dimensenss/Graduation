@@ -1,0 +1,36 @@
+{% load static %}
+{% for course in courses %}
+    <div class="d-flex p-3 mb-4 border rounded">
+        <a href="{{ course.get_absolute_url }}" class="text-decoration-none">
+            <!-- Изображение -->
+            {% if course.preview %}
+                <img src="{{ course.preview.url }}"
+                     alt="{{ course.course_name }}"
+                     class="img-fluid me-3 rounded card-image">
+            {% else %}
+                <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                     alt="{{ course.course_name }}"
+                     class="img-fluid me-3 rounded card-image">
+            {% endif %}
+        </a>
+        <div>
+            <h5 class="card-title">{{ course.course_name }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ request.user }}</h6>
+            <p class="card-text">{{ course.full_price }}</p>
+            <a href="edit" class="text-dark">Редагувати</a>
+            <div class="dropdown">
+                <a class="text-dark dropdown-toggle" href="#" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Редагувати</a></li>
+                    <li><a class="dropdown-item" href="#">Видалити</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+{% endfor %}

@@ -7564,3 +7564,7 @@ transition: all 0.3s ease 0s;
   line-height: 1.43;
   letter-spacing: .3px;
 }
+.dropdown-item {
+    font-size: 16px;
+padding: 5px 15px 5px 15px;
+}

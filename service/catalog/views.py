@@ -16,11 +16,11 @@ class CatalogMainView(ListView):
     context_object_name = 'cats'
 
     def get_queryset(self):
-        return Category.objects.filter(parent__title='Promo').only('id', 'title')
+        return Category.objects.filter(parent__title='Promo',).only('id', 'title')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = CourseFilter(self.request.GET, queryset=Course.objects.all())
+        context['filter'] = CourseFilter(self.request.GET, queryset=Course.objects.filter(is_published=True).select_related('owner'))
         return context
 
 class CatalogListView(ListView):
@@ -29,7 +29,7 @@ class CatalogListView(ListView):
     context_object_name = 'courses'
 
     def get_queryset(self):
-        courses = Course.objects.all().select_related('owner')
+        courses = Course.objects.filter(is_published=True).select_related('owner')
         filtered_qs = CourseFilter(self.request.GET, queryset=courses)
         return filtered_qs.qs
 
@@ -41,7 +41,7 @@ class CatalogListView(ListView):
 class SearchView(TemplateView):
     template_name = 'catalog/includes/courses_list.html'
     def get(self, request, *args, **kwargs):
-        courses = Course.objects.all().select_related('owner')
+        courses = Course.objects.filter(is_published=True).select_related('owner')
         filtered_qs = CourseFilter(self.request.GET, queryset=courses)
 
         context = {'courses': filtered_qs.qs}
@@ -55,7 +55,7 @@ class GetCoursesView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         cat_id = request.GET.get('cat_id')
-        courses = Course.objects.filter(cat_id=cat_id).select_related('owner').order_by('-created_at')
+        courses = Course.objects.filter(cat_id=cat_id, is_published=True).select_related('owner').order_by('-created_at')
 
         context = {'courses': courses, 'cat_id': cat_id}
         html = render_to_string(self.template_name, context)

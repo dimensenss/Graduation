@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <div class="marco-layout">
+        <div class="container-fluid">
+            <div class="row">
+                {% block sidepanel %}
+                    {% include 'teach/includes/teach_sidepanel.html' %}
+                {% endblock %}
+
+                {% block teach_layout %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

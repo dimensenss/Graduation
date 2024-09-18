@@ -1,0 +1,50 @@
+{% extends 'teach/teach_base.html' %}
+
+{% load static %}
+
+{% block teach_layout %}
+    <div class="col-md-9">
+        <div class="catalog-main-content">
+            <div class="catalog-search-bar">
+                <div class="d-flex flex-row justify-content-center align-items-center catalog-search-form">
+                    <form method="get" class="search-form d-flex align-items-center flex-fill"
+                          id="teach-courses-search-form">
+                        <div class="input-group flex-fill me-3">
+                                        <span class="input-group-text"><i
+                                                class="fa-solid fa-magnifying-glass"></i></span>
+                            <input type="text" name="q" placeholder="Пошук..."
+                                   class="form-control search-input"
+                                   value="{{ request.GET.q }}">
+                            <input type="hidden" value="{{ request.user.id }}" id="user_owner">
+                        </div>
+                        <div class="d-none d-md-flex">
+                            <button class="button-3 flex-fill me-3">Пошук</button>
+                        </div>
+                        <div class="d-flex d-md-none">
+                            <button class="filters-btn" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasWithBothOptions"
+                                    aria-controls="offcanvasWithBothOptions"><i
+                                    class="fa-solid fa-filter"></i>
+                            </button>
+                        </div>
+                        <input type="checkbox" name="">
+                    </form>
+
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="courses-list">
+                        {% include 'teach/includes/teach_courses_list.html' %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

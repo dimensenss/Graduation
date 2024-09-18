@@ -18,7 +18,7 @@
                             <div class="d-flex flex-row justify-content-center align-items-center catalog-search-form">
                                 <form method="get" class="search-form d-flex align-items-center flex-fill"
                                       action="{% url 'catalog:search-catalog' %}"
-                                      id="catalog-search-form-main">
+                                      id="courses-search-form-main">
                                     <div class="input-group flex-fill me-3">
                                         <span class="input-group-text"><i
                                                 class="fa-solid fa-magnifying-glass"></i></span>
@@ -55,9 +55,15 @@
                                                 <div class="card-body">
                                                     <div class="d-flex">
                                                         <!-- Изображение -->
+                                                        {% if course.preview %}
                                                         <img src="{{ course.preview.url }}"
                                                              alt="{{ course.course_name }}"
                                                              class="img-fluid me-3 rounded card-image">
+                                                            {% else %}
+                                                            <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                                                             alt="{{ course.course_name }}"
+                                                             class="img-fluid me-3 rounded card-image">
+                                                        {% endif %}
 
                                                         <div>
                                                             <h5 class="card-title">{{ course.course_name }}</h5>

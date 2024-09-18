@@ -458,355 +458,6 @@ $(document).ready(function ($) {
 });
 
 
-// $(document).ready(function() {
-//     $('#catalog-search-form').on('submit', function(e) {
-//         e.preventDefault();
-//         let formData = $(this).serialize();
-//         $.ajax({
-//                 type: 'GET',
-//                 url: '/catalog/api/v1/search/',
-//                 data: formData,
-//                 success: function (data) {
-//                    console.log(data);
-//                 }
-//             });
-//     });
-// });
-// $(document).ready(function () {
-//     // Привязываем обработчик для обеих форм
-//     const forms = $('#catalog-search-form-desktop, #catalog-search-form-mobile');
-//
-//     forms.on('change', function (event) {
-//         event.preventDefault();
-//
-//         const form = $(this); // Текущая форма
-//         const formData = form.serializeArray();
-//         const params = new URLSearchParams(window.location.search);
-//
-//         form.find('input[name="price__gte"], input[name="price__lte"]').each(function () {
-//             const input = $(this);
-//             if (input.val() === '0') {
-//                 input.val(''); // Заменяем 0 на пустое значение
-//             }
-//         });
-//
-//         // Обновляем параметры URL, явно учитывая состояние чекбоксов
-//         form.find('input[type="checkbox"]').each(function () {
-//             const checkbox = $(this);
-//             const name = checkbox.attr('name');
-//             if (!checkbox.is(':checked')) {
-//                 params.delete(name); // Удаляем из параметров, если чекбокс не отмечен
-//             } else {
-//                 params.set(name, checkbox.val()); // Добавляем в параметры, если чекбокс отмечен
-//             }
-//         });
-//
-//         // Обновляем остальные параметры формы (например, текстовые поля)
-//         formData.forEach(function (item) {
-//             if (item.value && item.value !== '0') { // Проверяем, что значение не пустое и не равно 0
-//                 params.set(item.name, item.value);
-//             } else {
-//                 params.delete(item.name); // Удаляем параметр, если значение пустое или равно 0
-//             }
-//         });
-//
-//         // Обновляем строку запроса в URL без перезагрузки страницы
-//         const newUrl = window.location.pathname + '?' + params.toString();
-//         window.history.replaceState({}, '', newUrl);
-//         console.log(params);
-//
-//         // Отправляем AJAX запрос
-//         $.ajax({
-//             url: '/catalog/api/v1/search/',
-//             type: 'GET',
-//             data: params.toString(), // Передаем параметры URL в запросе
-//             dataType: 'json',
-//             success: function (data) {
-//                 const coursesList = $('.courses-list');
-//                 coursesList.empty();
-//                 coursesList.html(data); // Обновляем контент
-//             },
-//             error: function (xhr, status, error) {
-//                 console.error('Ошибка:', error);
-//             }
-//         });
-//     });
-// });
-// $(document).ready(function () {
-//     // Привязываем обработчик для обеих форм
-//     const forms = $('#catalog-search-form-desktop, #catalog-search-form-mobile');
-//     function resetSelectFields() {
-//         forms.find('select').each(function () {
-//             $(this).prop('selectedIndex', 0); // Сбрасываем select на первый элемент
-//         });
-//     }
-//     // Функция обновления URL и выполнения поиска
-//     function updateSearch(params) {
-//         const newUrl = window.location.pathname + '?' + params.toString();
-//         window.history.replaceState({}, '', newUrl);
-//         console.log(params);
-//
-//         // Отправляем AJAX запрос
-//         $.ajax({
-//             url: '/catalog/api/v1/search/',
-//             type: 'GET',
-//             data: params.toString(), // Передаем параметры URL в запросе
-//             dataType: 'json',
-//             success: function (data) {
-//                 const coursesList = $('.courses-list');
-//                 coursesList.empty();
-//                 coursesList.html(data); // Обновляем контент
-//
-//                 // Обновляем кнопки активных фильтров
-//                 updateFilterButtons(params);
-//                 // Обновляем форму с фильтрами
-//                 updateFormFromParams(params);
-//             },
-//             error: function (xhr, status, error) {
-//                 console.error('Ошибка:', error);
-//             }
-//         });
-//     }
-//
-//     // Функция создания кнопок для активных фильтров
-//    function updateFilterButtons(params) {
-//     const filterContainer = $('.active-filters');
-//     filterContainer.empty(); // Очистка существующих кнопок
-//
-//     params.forEach((value, key) => {
-//         // Проверяем, что значение не пустое и не равно нулю
-//         if (value && value !== '0') {
-//             const filterButton = $('<button type="button" class=" me-2 mb-2"></button>')
-//                 .text(`${key}: ${value} ✕`)
-//                 .click(function () {
-//                     params.delete(key); // Удаляем фильтр из URL-параметров
-//                     updateSearch(params); // Обновляем поиск с новыми параметрами
-//                 });
-//
-//             filterContainer.append(filterButton);
-//         }
-//     });
-// }
-//
-//
-//     // Функция обновления формы на основе параметров URL
-//     function updateFormFromParams(params) {
-//         // Очищаем значения полей формы
-//                 forms.find('input[type="text"], input[type="number"]').val('');
-//         forms.find('input[type="checkbox"]').prop('checked', false);
-//         forms.find('select').prop('selectedIndex', 0); // Сбрасываем select на первый элемент
-//
-//         // Применяем параметры из URL к форме
-//         params.forEach((value, key) => {
-//             const field = forms.find(`[name="${key}"]`);
-//
-//             if (field.attr('type') === 'checkbox') {
-//                 field.prop('checked', true); // Устанавливаем чекбоксы
-//             } else if (field.is('select')) {
-//                 field.val(value); // Выбираем нужный элемент select
-//             } else {
-//                 field.val(value); // Устанавливаем значения для текстовых и числовых полей
-//             }
-//         });
-//     }
-//
-//     // Обработчик изменения формы
-//     forms.on('change', function (event) {
-//         event.preventDefault();
-//
-//         const form = $(this);
-//         const formData = form.serializeArray();
-//         const params = new URLSearchParams(window.location.search);
-//
-//         form.find('input[name="price__gte"], input[name="price__lte"]').each(function () {
-//             const input = $(this);
-//             if (input.val() === '0' ) {
-//                 input.val(''); // Заменяем 0 на пустое значение
-//             }
-//         });
-//
-//         // Обновляем параметры URL, явно учитывая состояние чекбоксов
-//         form.find('input[type="checkbox"]').each(function () {
-//             const checkbox = $(this);
-//             const name = checkbox.attr('name');
-//             if (!checkbox.is(':checked')) {
-//                 params.delete(name); // Удаляем из параметров, если чекбокс не отмечен
-//             } else {
-//                 params.set(name, checkbox.val()); // Добавляем в параметры, если чекбокс отмечен
-//             }
-//         });
-//
-//         // Обновляем остальные параметры формы (например, текстовые поля)
-//         formData.forEach(function (item) {
-//             if (item.value && item.value !== '0') { // Проверяем, что значение не пустое и не равно 0
-//                 params.set(item.name, item.value);
-//             } else {
-//                 params.delete(item.name); // Удаляем параметр, если значение пустое или равно 0
-//             }
-//         });
-//
-//         updateSearch(params); // Обновляем поиск с новыми параметрами
-//     });
-//
-//     // Инициализация начальных фильтров и формы при загрузке страницы
-//     const initialParams = new URLSearchParams(window.location.search);
-//     updateFilterButtons(initialParams);
-//     updateFormFromParams(initialParams);
-// });
-
-
-// $(document).ready(function () {
-//     const forms = $('#catalog-search-form-desktop, #catalog-search-form-mobile');
-//
-//
-//     // Функция обновления URL и выполнения поиска
-//     function updateSearch(params) {
-//         const newUrl = window.location.pathname + '?' + params.toString();
-//         window.history.replaceState({}, '', newUrl);
-//         console.log(params);
-//
-//         // Отправляем AJAX запрос
-//         $.ajax({
-//             url: '/catalog/api/v1/search/',
-//             type: 'GET',
-//             data: params.toString(), // Передаем параметры URL в запросе
-//             dataType: 'json',
-//             success: function (data) {
-//                 const coursesList = $('.courses-list');
-//                 coursesList.empty();
-//                 coursesList.html(data); // Обновляем контент
-//
-//                 // Обновляем кнопки активных фильтров
-//                 updateFilterButtons(params);
-//                 // Обновляем форму с фильтрами
-//                 updateFormFromParams(params);
-//             },
-//             error: function (xhr, status, error) {
-//                 console.error('Ошибка:', error);
-//             }
-//         });
-//     }
-//
-// function resetSelectFields() {
-//     console.log('reset select');
-//
-//     // Для кастомного селекта nice-select
-//     const languageSelect = forms.find('select[name="language"]');
-//
-//     // Установите значение для внутреннего HTML селекта
-//     const niceSelect = languageSelect.siblings('.nice-select');
-//     niceSelect.find('.current').text('Будь-яка мова');
-//     niceSelect.find('.option').removeClass('selected');
-//     niceSelect.find('.option[data-value=""]').addClass('selected');
-//
-//     // Обновите значение в оригинальном селекте
-//     languageSelect.val('');
-// }
-//
-//
-//     // Функция создания кнопок для активных фильтров
-//     function updateFilterButtons(params) {
-//         const filterContainer = $('.active-filters');
-//         filterContainer.empty(); // Очистка существующих кнопок
-//
-//         let searchInputValueCleared = false; // Флаг для проверки, был ли очищен поле поиска
-//
-//         params.forEach((value, key) => {
-//             if (value && value !== '0') {
-//                 const filterButton = $('<button type="button" class=" me-2 mb-2"></button>')
-//                     .text(`${key}: ${value} ✕`)
-//                     .click(function () {
-//                         params.delete(key); // Удаляем фильтр из URL-параметров
-//                         updateSearch(params); // Обновляем поиск с новыми параметрами
-//                         if (key === 'q') {
-//                             $('.search-input').val(''); // Очищаем поле поиска, если фильтр поиска удален
-//                             searchInputValueCleared = true;
-//                         } else if (key === 'language') {
-//                             resetSelectFields(); // Сбрасываем селект, если фильтр языка удален
-//                         }
-//                     });
-//
-//                 filterContainer.append(filterButton);
-//             }
-//         });
-//
-//         // Если поле поиска очищено, убедитесь, что оно пустое
-//         if (searchInputValueCleared) {
-//             $('.search-input').val('');
-//         }
-//     }
-//
-//     // Функция обновления формы на основе параметров URL
-//     function updateFormFromParams(params) {
-//         // Очищаем значения полей формы
-//         forms.find('input[type="text"], input[type="number"]').val('');
-//         forms.find('input[type="checkbox"]').prop('checked', false);
-//
-//
-//         // Применяем параметры из URL к форме
-//         params.forEach((value, key) => {
-//             const field = forms.find(`[name="${key}"]`);
-//
-//             if (field.attr('type') === 'checkbox') {
-//                 field.prop('checked', true); // Устанавливаем чекбоксы
-//             } else if (field.is('select')) {
-//                 field.val(value); // Выбираем нужный элемент select
-//             } else {
-//                 field.val(value); // Устанавливаем значения для текстовых и числовых полей
-//             }
-//         });
-//
-//         // Обновляем поле ввода поиска
-//         if (params.has('q')) {
-//             $('.search-input').val(params.get('q'));
-//         } else {
-//             $('.search-input').val(''); // Очищаем поле поиска, если параметра 'q' нет
-//         }
-//     }
-//
-//     // Обработчик изменения формы
-//     forms.on('change', function (event) {
-//         event.preventDefault();
-//
-//         const form = $(this);
-//         const formData = form.serializeArray();
-//         const params = new URLSearchParams(window.location.search);
-//
-//         form.find('input[name="price__gte"], input[name="price__lte"]').each(function () {
-//             const input = $(this);
-//             if (input.val() === '0') {
-//                 input.val(''); // Заменяем 0 на пустое значение
-//             }
-//         });
-//
-//         // Обновляем параметры URL, явно учитывая состояние чекбоксов
-//         form.find('input[type="checkbox"]').each(function () {
-//             const checkbox = $(this);
-//             const name = checkbox.attr('name');
-//             if (!checkbox.is(':checked')) {
-//                 params.delete(name); // Удаляем из параметров, если чекбокс не отмечен
-//             } else {
-//                 params.set(name, checkbox.val()); // Добавляем в параметры, если чекбокс отмечен
-//             }
-//         });
-//
-//         // Обновляем остальные параметры формы (например, текстовые поля)
-//         formData.forEach(function (item) {
-//             if (item.value && item.value !== '0') { // Проверяем, что значение не пустое и не равно 0
-//                 params.set(item.name, item.value);
-//             } else {
-//                 params.delete(item.name); // Удаляем параметр, если значение пустое или равно 0
-//             }
-//         });
-//
-//         updateSearch(params); // Обновляем поиск с новыми параметрами
-//     });
-//
-//     // Инициализация начальных фильтров и формы при загрузке страницы
-//     const initialParams = new URLSearchParams(window.location.search);
-//     updateFilterButtons(initialParams);
-//     updateFormFromParams(initialParams);
-// });
 $(document).ready(function () {
 
      $('#catalog-search-form-main').on('submit', function (event) {
@@ -867,31 +518,6 @@ $(document).ready(function () {
         .filter('[data-value=""]').addClass('selected');
     select.val('');
 }
-
-    // function updateFilterButtons(params) {
-    //     const filterContainer = $('.active-filters').empty();
-    //     let searchInputCleared = false;
-    //
-    //     params.forEach((value, key) => {
-    //         if (value && value !== '0') {
-    //             $('<button type="button" class="button-3 m-0 me-2 mb-2" style="width: 100px; height: 40px"></button>')
-    //                 .text(`${value} ✕`)
-    //                 .click(function () {
-    //                     params.delete(key);
-    //                     updateSearch(params);
-    //                     if (key === 'q') {
-    //                         $('.search-input').val('');
-    //                         searchInputCleared = true;
-    //                     } else if (key === 'language') {
-    //                         resetSelectFields();
-    //                     }
-    //                 })
-    //                 .appendTo(filterContainer);
-    //         }
-    //     });
-    //
-    //     if (searchInputCleared) $('.search-input').val('');
-    // }
      function updateFilterButtons(params) {
         const filterContainer = $('.active-filters').empty();
         let searchInputCleared = false;
@@ -981,3 +607,51 @@ $(document).ready(function () {
     updateFilterButtons(new URLSearchParams(window.location.search));
     updateFormFromParams(new URLSearchParams(window.location.search));
 });
+
+
+
+$(document).ready(function () {
+    // Привязываем обработчик для обеих форм
+    const forms = $('#teach-courses-search-form');
+    const userOwner = $('#teach-courses-search-form').find('#user_owner').val();
+
+    forms.on('submit', function (event) {
+        event.preventDefault();
+        const form = $(this); // Текущая форма
+
+        const params = new URLSearchParams(window.location.search);
+
+        const searchQuery = form.find('input[name="q"]').val();
+        if (searchQuery) {
+            params.set('q', searchQuery);
+            params.set('owner', userOwner);
+        }
+        else if(searchQuery === '') {
+            params.delete('q');
+            params.delete('owner');
+        }
+
+
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.history.replaceState({}, '', newUrl);
+        console.log(params);
+
+        // Отправляем AJAX запрос
+        $.ajax({
+            url: '/teach/api/v1/teach-search/',
+            type: 'GET',
+            data: params.toString(), // Передаем параметры URL в запросе
+            dataType: 'json',
+            success: function (data) {
+                const coursesList = $('.courses-list');
+                coursesList.empty();
+                coursesList.html(data); // Обновляем контент
+            },
+            error: function (xhr, status, error) {
+                console.error('Ошибка:', error);
+            }
+        });
+    });
+});
+
+

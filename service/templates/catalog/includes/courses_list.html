@@ -3,8 +3,15 @@
     <div class="card course-card">
         <div class="card-body">
             <div class="d-flex">
-                <!-- Изображение -->
-                <img src="{{ course.preview.url }}" alt="" class="img-fluid me-3 rounded card-image">
+                {% if course.preview %}
+                                        <img src="{{ course.preview.url }}"
+                                             alt="{{ course.course_name }}"
+                                             class="img-fluid me-3 rounded card-image">
+                                    {% else %}
+                                        <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                                             alt="{{ course.course_name }}"
+                                             class="img-fluid me-3 rounded card-image">
+                                    {% endif %}
 
                 <div>
                     <h5 class="card-title">{{ course.course_name }}</h5>

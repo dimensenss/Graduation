@@ -22,8 +22,14 @@
 
                     </div>
                     <div class="col-md-4 text-center ">
-                        <img src="{{ course.preview.url }}" alt="Course Icon" class="img-fluid rounded"
-                             style="height: 200px;">
+                        {% if course.preview %}
+                            <img src="{{ course.preview.url }}" alt="{{ course.course_name }}" class="img-fluid rounded"
+                                 style="height: 200px;">
+                        {% else %}
+                            <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                                 alt="{{ course.course_name }}"
+                                 class="img-fluid me-3 rounded card-image">
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row">

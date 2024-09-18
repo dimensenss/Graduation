@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import *
 
-
+from catalog.utils import CourseFilter
 from services.models import Course
 from teach.forms import CourseCreateForm
 from teach.mixins import OwnerPermissionMixin
@@ -17,10 +19,24 @@ class TeachPromoView(TemplateView):
 
     template_name = 'teach/teach_promo.html'
 
-class TeachCoursesView(LoginRequiredMixin,CreateView):
-    template_name = 'teach/teach_courses.html'
+class TeachCoursesView(LoginRequiredMixin, ListView):
+    template_name = 'teach/teach_courses_list.html'
+    model = Course
+    context_object_name = 'courses'
+
+    def get_queryset(self):
+        courses = Course.objects.filter(owner=self.request.user).order_by('-created_at')
+        filtered_qs = CourseFilter(self.request.GET, queryset=courses)
+        return filtered_qs.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+class TeachCourseCreate(LoginRequiredMixin, CreateView):
     model = Course
     form_class = CourseCreateForm
+    template_name = 'teach/teach_course_create.html'
     success_url = reverse_lazy('teach:courses')
 
     def form_valid(self, form):
@@ -32,15 +48,20 @@ class TeachCoursesView(LoginRequiredMixin,CreateView):
         messages.error(self.request, form.errors)
         return super().form_invalid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['my_courses'] = Course.objects.filter(owner=self.request.user).select_related('owner')
-        return context
-
 class TeachCourseEdit(LoginRequiredMixin,OwnerPermissionMixin, UpdateView):
     model = Course
-    form_class = CourseCreateForm
-    template_name = 'teach/teach_courses.html'
+    form_class = CourseCreateForm #CourseUpdateForm
+    template_name = 'teach/teach_courses_list.html'
     def get_object(self, queryset=None):
         return Course.objects.get(pk=self.kwargs['pk'])
+
+class TeachCoursesSearchView(TemplateView):
+    template_name = 'teach/includes/teach_courses_list.html'
+    def get(self, request, *args, **kwargs):
+        courses = Course.objects.all()
+        filtered_qs = CourseFilter(self.request.GET, queryset=courses)
+
+        context = {'courses': filtered_qs.qs}
+        html = render_to_string(self.template_name, context)
+        return JsonResponse(html, safe=False)
 

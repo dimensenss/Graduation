@@ -3,6 +3,7 @@
 
 {% block content %}
     <div class="catalog">
+
         <div class="catalog-search-bar">
             <div class="d-flex flex-row justify-content-center align-items-center catalog-search-form">
                 <form method="get" class=" mt-1 search-form d-flex align-items-center flex-fill"
@@ -16,18 +17,14 @@
 
                     <div class="d-none d-md-flex">
                         <div class="flex-fill me-3 ">
-                            <select aria-label="Default select example">
-                                <option selected>Будь-якою мовою</option>
-                                <option value="1">Українська</option>
-                                <option value="2">English</option>
-                            </select>
+                            {{ filter.form.language }}
                         </div>
                         <div class="d-flex align-items-center me-3 flex-fill">
-                            <input type="checkbox" class="me-2">
+                            {{ filter.form.have_certificate }}
                             <span>З&nbspсертифікатами</span>
                         </div>
                         <div class="d-flex align-items-center me-3 flex-fill">
-                            <input type="checkbox" class="me-2">
+                            {{ filter.form.is_free }}
                             <span>Безкоштовні</span>
                         </div>
                     </div>
@@ -87,37 +84,37 @@
 
     </div>
     <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
-<script>
-$(document).ready(function () {
-    var loadedTabs = {};
+    <script>
+        $(document).ready(function () {
+            var loadedTabs = {};
 
-    function loadTabContent(cat_id) {
-    if (!loadedTabs[cat_id]) {
-        setTimeout(function() {
-            $.ajax({
-                type: 'GET',
-                url: '/catalog/api/v1/get-courses/',
-                data: {
-                    cat_id: cat_id,
-                },
-                success: function (data) {
-                    $('#pills-' + cat_id).html(data);
-                    loadedTabs[cat_id] = true;
+            function loadTabContent(cat_id) {
+                if (!loadedTabs[cat_id]) {
+                    setTimeout(function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/catalog/api/v1/get-courses/',
+                            data: {
+                                cat_id: cat_id,
+                            },
+                            success: function (data) {
+                                $('#pills-' + cat_id).html(data);
+                                loadedTabs[cat_id] = true;
+                            }
+                        });
+                    }, 300);
                 }
+            }
+
+            var activeTabCatId = parseInt($('button.nav-link.active').data('cat-id'), 10);
+            loadTabContent(activeTabCatId);
+
+            $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+                var cat_id = $(e.target).data('cat-id'); // Получаем id категории
+                loadTabContent(cat_id);
             });
-        }, 300);
-    }
-}
-
-    var activeTabCatId = parseInt($('button.nav-link.active').data('cat-id'), 10);
-    loadTabContent(activeTabCatId);
-
-    $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
-        var cat_id = $(e.target).data('cat-id'); // Получаем id категории
-        loadTabContent(cat_id);
-    });
-});
-</script>
+        });
+    </script>
 
 
 {% endblock content %}

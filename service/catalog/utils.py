@@ -20,6 +20,9 @@ class CourseFilter(django_filters.FilterSet):
         label='Рівень',
         empty_label='Все'  # Показывать "Все" как опцию по умолчанию
     )
+    owner = django_filters.CharFilter(field_name='owner__id', lookup_expr='icontains', label='Власник:')
+    is_published = django_filters.BooleanFilter(field_name='is_published', label='Опублікувати')
+
 
     def name_desc_filter(self, queryset, name, value):
         if value.isdigit() and len(value) <= 5:
