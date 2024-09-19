@@ -40,12 +40,11 @@
                                                         href="{% url 'clients:register' %}"
                                                         class="btn btn3">Регістрація</a>
                                                 </li>
-                                                <li class="button-header"><a href="{% url 'clients:login' %}"
+                                                <li ><a href="{% url 'clients:login' %}"
                                                                              class="btn btn3">Вхід</a>
                                                 </li>
                                             {% else %}
-                                                <li class="button-header"><a href="{% url 'clients:logout' %}"
-                                                                             class="btn btn3">Вихід</a>
+                                                <li><a href="{% url 'clients:logout' %}">Вихід</a>
                                                 </li>
                                             {% endif %}
                                         </ul>

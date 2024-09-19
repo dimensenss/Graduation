@@ -1,0 +1,55 @@
+{% load static %}
+
+{% if courses %}
+    {% for course in courses %}
+        <div class="d-flex p-3 mb-4 border rounded">
+            <a href="{{ course.get_absolute_url }}" class="text-decoration-none">
+                <!-- Изображение -->
+                {% if course.preview %}
+                    <img src="{{ course.preview.url }}"
+                         alt="{{ course.course_name }}"
+                         class="img-fluid me-3 rounded card-image">
+                {% else %}
+                    <img src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
+                         alt="{{ course.course_name }}"
+                         class="img-fluid me-3 rounded card-image">
+                {% endif %}
+            </a>
+        <div class="d-flex flex-column w-100 px-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between">
+                        <h5>{{ course.course_name }}</h5>
+                        <div class="dropdown">
+                            <a class="text-dark dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'teach:course_edit' course.id %}">Редагувати
+                                    зміст</a></li>
+                                <li><a class="dropdown-item" href="#">Видалити</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex flex-column">
+                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ request.user }}</h6>
+                    <a href="edit" class="purple-link">Редагувати опис</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+
+    {% endfor %}
+    {# TODO for empty search res #}
+{% else %}
+    Створіть свій перший курс
+{% endif %}

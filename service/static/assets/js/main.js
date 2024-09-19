@@ -458,121 +458,306 @@ $(document).ready(function ($) {
 });
 
 
-$(document).ready(function () {
-
-     $('#catalog-search-form-main').on('submit', function (event) {
-        event.preventDefault(); // Останавливаем стандартное поведение формы
-
-        const form = $(this);
-        const formData = form.serializeArray();
-        const params = new URLSearchParams(window.location.search);
-
-        // Удаляем параметр 'q' из текущих параметров, если он есть
-        params.delete('q');
-
-        // Добавляем все параметры из формы, кроме 'q'
-        formData.forEach(({ name, value }) => {
-            if (name !== 'q') {
-                params.set(name, value);
-            }
-        });
-
-        // Добавляем новый параметр 'q' из формы
-        const searchQuery = form.find('input[name="q"]').val();
-        if (searchQuery) {
-            params.set('q', searchQuery);
-        }
-
-        // Создаем новый URL и перенаправляем
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.location.href = newUrl;
-    });
-
-    const forms = $('#catalog-search-form-desktop, #catalog-search-form-mobile');
-
-    function updateSearch(params) {
-        const newUrl = `${window.location.pathname}?${params.toString()}`;
-        window.history.replaceState({}, '', newUrl);
-
+// $(document).ready(function () {
+//
+//     $('#catalog-search-form-main').on('submit', function (event) {
+//         event.preventDefault(); // Останавливаем стандартное поведение формы
+//
+//         const form = $(this);
+//         const formData = form.serializeArray();
+//         const params = new URLSearchParams(window.location.search);
+//
+//         // Удаляем параметр 'q' из текущих параметров, если он есть
+//         params.delete('q');
+//
+//         // Добавляем все параметры из формы, кроме 'q'
+//         formData.forEach(({name, value}) => {
+//             if (name !== 'q') {
+//                 params.set(name, value);
+//             }
+//         });
+//
+//         // Добавляем новый параметр 'q' из формы
+//         const searchQuery = form.find('input[name="q"]').val();
+//         if (searchQuery) {
+//             params.set('q', searchQuery);
+//         }
+//
+//         // Создаем новый URL и перенаправляем
+//         const newUrl = `${window.location.pathname}?${params.toString()}`;
+//         window.location.href = newUrl;
+//     });
+//
+//     const forms = $('#catalog-search-form-desktop, #catalog-search-form-mobile');
+//
+//     function updateSearch(params) {
+//         const newUrl = `${window.location.pathname}?${params.toString()}`;
+//         window.history.replaceState({}, '', newUrl);
+//
+//         $.ajax({
+//             url: '/catalog/api/v1/search/',
+//             type: 'GET',
+//             data: params.toString(),
+//             dataType: 'json',
+//             success: function (data) {
+//                 $('.courses-list').empty().html(data);
+//                 updateFilterButtons(params);
+//                 updateFormFromParams(params);
+//             },
+//             error: function (xhr, status, error) {
+//                 console.error('Ошибка:', error);
+//             }
+//         });
+//     }
+//
+//     function resetSelectFields(fieldName) {
+//         const select = forms.find(`select[name="${fieldName}"]`);
+//         const niceSelect = select.siblings('.nice-select');
+//         niceSelect.find('.current').text('Всі') // Можно заменить на более общий текст, если нужно
+//             .end().find('.option').removeClass('selected')
+//             .filter('[data-value=""]').addClass('selected');
+//         select.val('');
+//     }
+//
+//     function updateFilterButtons(params) {
+//         const filterContainer = $('.active-filters').empty();
+//         let searchInputCleared = false;
+//
+//         params.forEach((value, key) => {
+//             if (value && value !== '0') {
+//                 let displayText = value;
+//                 const element = $(`input[name="${key}"], select[name="${key}"]`);
+//
+//                 if (element.length) {
+//                     // Для селектов ищем значение в опциях
+//                     if (element.is('select')) {
+//                         const option = element.find(`option[value="${value}"]`);
+//                         displayText = option.data('btn-label') || option.text();
+//                     } else {
+//                         displayText = element.data('btn-label') || value;
+//                         if (key.startsWith('price')) {
+//                             displayText = `${element.data('btn-label')} ${value}`;
+//                         }
+//                     }
+//                 }
+//
+//                 $('<button>', {
+//                     type: 'button',
+//                     class: 'button-4 m-0 me-2 mb-2',
+//                     style: 'height: 35px',
+//                     text: `${displayText} ✕`,
+//                     click: function () {
+//                         params.delete(key);
+//                         updateSearch(params);
+//                         if (key === 'q') {
+//                             $('.search-input').val('');
+//                             searchInputCleared = true;
+//                         } else if (key === 'language' || key === 'difficulty') {
+//                             resetSelectFields(key);
+//                         }
+//                     }
+//                 }).appendTo(filterContainer);
+//             }
+//         });
+//
+//         if (searchInputCleared) $('.search-input').val('');
+//     }
+//
+//
+//     function updateFormFromParams(params) {
+//         forms.find('input[type="text"], input[type="number"]').val('')
+//             .end().find('input[type="checkbox"]').prop('checked', false);
+//
+//         params.forEach((value, key) => {
+//             const field = forms.find(`[name="${key}"]`);
+//             if (field.is('select')) {
+//                 field.val(value);
+//             } else if (field.attr('type') === 'checkbox') {
+//                 field.prop('checked', true);
+//             } else {
+//                 field.val(value);
+//             }
+//         });
+//
+//         $('.search-input').val(params.get('q') || '');
+//     }
+//
+//     forms.on('change', function (event) {
+//         event.preventDefault();
+//         const form = $(this);
+//         const formData = form.serializeArray();
+//         const params = new URLSearchParams(window.location.search);
+//
+//         form.find('input[name="price__gte"], input[name="price__lte"]').val(function (_, value) {
+//             return value === '0' ? '' : value;
+//         });
+//
+//         form.find('input[type="checkbox"]').each(function () {
+//             const checkbox = $(this);
+//             const name = checkbox.attr('name');
+//             checkbox.is(':checked') ? params.set(name, checkbox.val()) : params.delete(name);
+//         });
+//
+//         formData.forEach(({name, value}) => {
+//             value && value !== '0' ? params.set(name, value) : params.delete(name);
+//         });
+//
+//         updateSearch(params);
+//     });
+//
+//     updateFilterButtons(new URLSearchParams(window.location.search));
+//     updateFormFromParams(new URLSearchParams(window.location.search));
+// });
+//
+//
+// $(document).ready(function () {
+//     // Привязываем обработчик для обеих форм
+//     const forms = $('#teach-courses-search-form');
+//     const userOwner = $('#teach-courses-search-form').find('#user_owner').val();
+//
+//     forms.on('submit', function (event) {
+//         event.preventDefault();
+//         const form = $(this); // Текущая форма
+//
+//         const params = new URLSearchParams(window.location.search);
+//
+//         const searchQuery = form.find('input[name="q"]').val();
+//         if (searchQuery) {
+//             params.set('q', searchQuery);
+//             params.set('owner', userOwner);
+//         } else if (searchQuery === '') {
+//             params.delete('q');
+//             params.delete('owner');
+//         }
+//
+//         const selectElement = document.querySelector('select[name="status"]');
+//         const selectedOption = selectElement.options[selectElement.selectedIndex];
+//         const selectedValue = selectedOption.value;
+//         params.set('status', selectedValue);
+//
+//
+//
+//         const newUrl = window.location.pathname + '?' + params.toString();
+//         window.history.replaceState({}, '', newUrl);
+//
+//
+//         // Отправляем AJAX запрос
+//         $.ajax({
+//             url: '/teach/api/v1/teach-search/',
+//             type: 'GET',
+//             data: params.toString(), // Передаем параметры URL в запросе
+//             dataType: 'json',
+//             success: function (data) {
+//                 const coursesList = $('.courses-list');
+//                 coursesList.empty();
+//                 coursesList.html(data); // Обновляем контент
+//             },
+//             error: function (xhr, status, error) {
+//                 console.error('Ошибка:', error);
+//             }
+//         });
+//     });
+// });
+//
+//
+function sendAjaxRequest(url, params, successCallback) {
         $.ajax({
-            url: '/catalog/api/v1/search/',
+            url: url,
             type: 'GET',
             data: params.toString(),
             dataType: 'json',
-            success: function (data) {
-                $('.courses-list').empty().html(data);
-                updateFilterButtons(params);
-                updateFormFromParams(params);
-            },
+            success: successCallback,
             error: function (xhr, status, error) {
                 console.error('Ошибка:', error);
             }
         });
     }
 
-    function resetSelectFields(fieldName) {
-    const select = forms.find(`select[name="${fieldName}"]`);
-    const niceSelect = select.siblings('.nice-select');
-    niceSelect.find('.current').text('Всі') // Можно заменить на более общий текст, если нужно
-        .end().find('.option').removeClass('selected')
-        .filter('[data-value=""]').addClass('selected');
-    select.val('');
-}
-     function updateFilterButtons(params) {
-        const filterContainer = $('.active-filters').empty();
-        let searchInputCleared = false;
+    // Обновление URL без перезагрузки страницы
+    function updateUrl(params) {
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, '', newUrl);
+    }
+    function serializeFormToParams(form) {
+        const formData = form.serializeArray();
+        const params = new URLSearchParams(window.location.search);
 
-        params.forEach((value, key) => {
+        formData.forEach(({name, value}) => {
             if (value && value !== '0') {
-                let displayText = value;
-                const element = $(`input[name="${key}"], select[name="${key}"]`);
-
-                if (element.length) {
-                    // Для селектов ищем значение в опциях
-                    if (element.is('select')) {
-                        const option = element.find(`option[value="${value}"]`);
-                        displayText = option.data('btn-label') || option.text();
-                    } else {
-                        displayText = element.data('btn-label') || value;
-                        if (key.startsWith('price')) {
-                            displayText = `${element.data('btn-label')} ${value}`;
-                        }
-                    }
-                }
-
-                $('<button>', {
-                    type: 'button',
-                    class: 'button-3 m-0 me-2 mb-2',
-                    style:  'height: 35px',
-                    text: `${displayText} ✕`,
-                    click: function () {
-                        params.delete(key);
-                        updateSearch(params);
-                        if (key === 'q') {
-                            $('.search-input').val('');
-                            searchInputCleared = true;
-                        } else if (key === 'language' || key === 'difficulty') {
-                            resetSelectFields(key);
-                        }
-                    }
-                }).appendTo(filterContainer);
+                params.set(name, value);
+            } else {
+                params.delete(name);
             }
         });
 
-        if (searchInputCleared) $('.search-input').val('');
+        return params;
     }
+$(document).ready(function () {
+    // Обработка сериализации формы и обновления URL
 
 
+    // Общая функция для отправки AJAX-запросов
+
+
+    // Обновление фильтров и полей формы
+function updateFilterButtons(params) {
+    const filterContainer = $('.active-filters').empty();
+    let searchInputCleared = false;
+
+    params.forEach((value, key) => {
+        if (value && value !== '0') {
+            let displayText = value;
+            const element = $(`input[name="${key}"], select[name="${key}"]`);
+
+            if (element.length) {
+                // Для селектов ищем значение в опциях
+                if (element.is('select')) {
+                    const option = element.find(`option[value="${value}"]`);
+                    displayText = option.data('btn-label') || option.text();
+                } else if (element.attr('type') === 'checkbox') {
+                    // Для чекбоксов используем data-btn-label
+                    displayText = element.data('btn-label') || value;
+                } else {
+                    displayText = element.data('btn-label') || value;
+                    if (key.startsWith('price')) {
+                        displayText = `${element.data('btn-label')} ${value}`;
+                    }
+                }
+            }
+
+            $('<button>', {
+                type: 'button',
+                class: 'button-4 m-0 me-2 mb-2',
+                style: 'height: 35px',
+                text: `${displayText} ✕`,
+                click: function () {
+                    params.delete(key);
+                    updateSearch(params);
+                    if (key === 'q') {
+                        $('.search-input').val('');
+                        searchInputCleared = true;
+                    } else if (key === 'language' || key === 'difficulty') {
+                        resetSelectFields(key);
+                    }
+                }
+            }).appendTo(filterContainer);
+        }
+    });
+
+    if (searchInputCleared) $('.search-input').val('');
+}
+
+
+    // Обновление полей формы на основе параметров URL
     function updateFormFromParams(params) {
-        forms.find('input[type="text"], input[type="number"]').val('')
-            .end().find('input[type="checkbox"]').prop('checked', false);
+        forms.find('input, select').each(function () {
+            const field = $(this);
+            const value = params.get(field.attr('name')) || '';
 
-        params.forEach((value, key) => {
-            const field = forms.find(`[name="${key}"]`);
             if (field.is('select')) {
                 field.val(value);
             } else if (field.attr('type') === 'checkbox') {
-                field.prop('checked', true);
+                field.prop('checked', value === field.val());
             } else {
                 field.val(value);
             }
@@ -581,77 +766,58 @@ $(document).ready(function () {
         $('.search-input').val(params.get('q') || '');
     }
 
-    forms.on('change', function (event) {
+    // Обновление поиска
+    function updateSearch(params) {
+        updateUrl(params);
+        sendAjaxRequest('/catalog/api/v1/search/', params, function (data) {
+            $('.courses-list').empty().html(data);
+            updateFilterButtons(params);
+            updateFormFromParams(params);
+        });
+    }
+
+    const forms = $('#catalog-search-form-main, #catalog-search-form-desktop, #catalog-search-form-mobile');
+
+    // Обработчик для всех форм
+    forms.on('submit change', function (event) {
         event.preventDefault();
         const form = $(this);
-        const formData = form.serializeArray();
-        const params = new URLSearchParams(window.location.search);
-
-        form.find('input[name="price__gte"], input[name="price__lte"]').val(function (_, value) {
-            return value === '0' ? '' : value;
-        });
-
-        form.find('input[type="checkbox"]').each(function () {
-            const checkbox = $(this);
-            const name = checkbox.attr('name');
-            checkbox.is(':checked') ? params.set(name, checkbox.val()) : params.delete(name);
-        });
-
-        formData.forEach(({ name, value }) => {
-            value && value !== '0' ? params.set(name, value) : params.delete(name);
-        });
+        const params = serializeFormToParams(form);
 
         updateSearch(params);
     });
 
-    updateFilterButtons(new URLSearchParams(window.location.search));
-    updateFormFromParams(new URLSearchParams(window.location.search));
+    // Инициализация фильтров и формы при загрузке
+    const initialParams = new URLSearchParams(window.location.search);
+    updateFilterButtons(initialParams);
+    updateFormFromParams(initialParams);
 });
 
-
-
+// Обработка формы поиска по курсам для владельца
 $(document).ready(function () {
-    // Привязываем обработчик для обеих форм
     const forms = $('#teach-courses-search-form');
     const userOwner = $('#teach-courses-search-form').find('#user_owner').val();
 
     forms.on('submit', function (event) {
         event.preventDefault();
-        const form = $(this); // Текущая форма
-
-        const params = new URLSearchParams(window.location.search);
+        const form = $(this);
+        const params = serializeFormToParams(form);
 
         const searchQuery = form.find('input[name="q"]').val();
         if (searchQuery) {
             params.set('q', searchQuery);
             params.set('owner', userOwner);
-        }
-        else if(searchQuery === '') {
+        } else {
             params.delete('q');
             params.delete('owner');
         }
 
+        const statusValue = form.find('select[name="status"]').val();
+        params.set('status', statusValue);
 
-        const newUrl = window.location.pathname + '?' + params.toString();
-        window.history.replaceState({}, '', newUrl);
-        console.log(params);
-
-        // Отправляем AJAX запрос
-        $.ajax({
-            url: '/teach/api/v1/teach-search/',
-            type: 'GET',
-            data: params.toString(), // Передаем параметры URL в запросе
-            dataType: 'json',
-            success: function (data) {
-                const coursesList = $('.courses-list');
-                coursesList.empty();
-                coursesList.html(data); // Обновляем контент
-            },
-            error: function (xhr, status, error) {
-                console.error('Ошибка:', error);
-            }
+        updateUrl(params);
+        sendAjaxRequest('/teach/api/v1/teach-search/', params, function (data) {
+            $('.courses-list').empty().html(data);
         });
     });
 });
-
-

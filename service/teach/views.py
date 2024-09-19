@@ -25,12 +25,13 @@ class TeachCoursesView(LoginRequiredMixin, ListView):
     context_object_name = 'courses'
 
     def get_queryset(self):
-        courses = Course.objects.filter(owner=self.request.user).order_by('-created_at')
+        courses = Course.objects.filter(owner=self.request.user).only('id', 'course_name', 'preview', 'full_price').order_by('-created_at')
         filtered_qs = CourseFilter(self.request.GET, queryset=courses)
         return filtered_qs.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filter'] = CourseFilter(self.request.GET, queryset=self.get_queryset())
         return context
 
 class TeachCourseCreate(LoginRequiredMixin, CreateView):
@@ -51,14 +52,14 @@ class TeachCourseCreate(LoginRequiredMixin, CreateView):
 class TeachCourseEdit(LoginRequiredMixin,OwnerPermissionMixin, UpdateView):
     model = Course
     form_class = CourseCreateForm #CourseUpdateForm
-    template_name = 'teach/teach_courses_list.html'
+    template_name = 'teach/teach_course_edit.html'
     def get_object(self, queryset=None):
         return Course.objects.get(pk=self.kwargs['pk'])
 
 class TeachCoursesSearchView(TemplateView):
-    template_name = 'teach/includes/teach_courses_list.html'
+    template_name = 'teach/includes/teach_included_courses_list.html'
     def get(self, request, *args, **kwargs):
-        courses = Course.objects.all()
+        courses = Course.objects.filter(owner=self.request.user).only('id','course_name', 'preview', 'is_published')
         filtered_qs = CourseFilter(self.request.GET, queryset=courses)
 
         context = {'courses': filtered_qs.qs}

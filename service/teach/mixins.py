@@ -1,4 +1,5 @@
 from django.http import HttpResponseForbidden
+from django.shortcuts import render
 
 
 class OwnerPermissionMixin:
@@ -7,5 +8,5 @@ class OwnerPermissionMixin:
 
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permission():
-            return HttpResponseForbidden("Ви не власник цього курса")
+            return render(request, 'includes/access_denied.html', {'error':'Доступ заборонено', 'status':'403'}, status=403)
         return super().dispatch(request, *args, **kwargs)

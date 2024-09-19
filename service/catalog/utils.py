@@ -21,9 +21,15 @@ class CourseFilter(django_filters.FilterSet):
         empty_label='Все'  # Показывать "Все" как опцию по умолчанию
     )
     owner = django_filters.CharFilter(field_name='owner__id', lookup_expr='icontains', label='Власник:')
-    is_published = django_filters.BooleanFilter(field_name='is_published', label='Опублікувати')
+    status = django_filters.ChoiceFilter(method='status_filter',choices=[(0, 'Всі'),(1, 'Опублікувані'), (2, 'Чернетки'),], widget=forms.Select,
+                                               label='Опублікувати')
 
-
+    def status_filter(self, queryset, name, value):
+        if value == '1':
+            return queryset.filter(is_published=True)
+        if value == '2':
+            return queryset.filter(is_published=False)
+        return queryset
     def name_desc_filter(self, queryset, name, value):
         if value.isdigit() and len(value) <= 5:
             return queryset.filter(id=value)
@@ -31,8 +37,9 @@ class CourseFilter(django_filters.FilterSet):
         vector = SearchVector('course_name', 'description')
         query = SearchQuery(value)
         normalization = Value(2).bitor(Value(4))
-        return queryset.annotate(rank=SearchRank(vector, query, normalization=normalization)).filter(
+        qs = queryset.annotate(rank=SearchRank(vector, query, normalization=normalization)).filter(
             rank__gt=0).order_by("-rank")
+        return qs
 
     def is_free_filter(self, queryset, name, value):
         if value:
