@@ -9,9 +9,17 @@
                 <div class="d-flex flex-row justify-content-center align-items-center catalog-search-form">
                     <form method="get" class="search-form d-flex align-items-center flex-fill"
                           id="teach-courses-search-form">
+                        <div class="d-flex me-3">
+                            <select class="nice-select" name="status" tabindex="0">
+                                    <option value="0" class="option selected">Всі</option>
+                                    <option value="1" class="option ">Опублікувані</option>
+                                    <option value="2" class="option focus">Чернетки</option>
+                            </select>
+                        </div>
                         <div class="input-group flex-fill me-3">
                                         <span class="input-group-text"><i
                                                 class="fa-solid fa-magnifying-glass"></i></span>
+
                             <input type="text" name="q" placeholder="Пошук..."
                                    class="form-control search-input"
                                    value="{{ request.GET.q }}">
@@ -27,13 +35,7 @@
                                     class="fa-solid fa-filter"></i>
                             </button>
                         </div>
-                        <div class="d-flex ">
-                            <select class="nice-select" name="status" tabindex="0">
-                                    <option value="0" class="option selected">Всі</option>
-                                    <option value="1" class="option ">Опублікувані</option>
-                                    <option value="2" class="option focus">Чернетки</option>
-                            </select>
-                        </div>
+
                     </form>
 
 

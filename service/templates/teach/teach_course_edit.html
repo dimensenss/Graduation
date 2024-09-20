@@ -5,45 +5,99 @@
 {% block teach_layout %}
     <div class="col-md-9">
         <div class="catalog-main-content">
-            <form id="course-form" action="{% url 'teach:create_course' %}" method="post">
-                {% csrf_token %}
-                {% if form.captcha.errors %}
-                    <div class="alert alert-danger alert-dismissible pb-0 captcha-error" role="alert">
-                        <div class="form-error-1 text-center">Ви не пройшли перевірку на робота</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                aria-label="Close"></button>
+            {# start Image video load #}
+            <div class="row mb-30">
+                <div class="col-md-6">
+                    <div class="d-flex bg-dark" style="height: 200px;">
+                        <div class="text-center text-primary">Upload image</div>
                     </div>
-                {% endif %}
-                <div class="mb-3">
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex bg-secondary" style="height: 200px;">
+                        <div class="text-center text-primary">Upload preview video</div>
+                    </div>
+                </div>
+
+            </div>
+            {# end Image video load #}
+
+            {# start title #}
+            <div class="row mb-30">
+                <div class="col-md-12">
                     <label for="id_course_name">Назва курсу:</label>
-                    <input type="text" class="form-control" name="course_name" maxlength="255" required=""
+                    <input type="text" class="form-control" name="course_name" maxlength="255"
                            id="id_course_name">
                 </div>
+            </div>
+            {# end title #}
 
-                <div id="captcha-container" class="mb-3" style="display:none;">
-                    {{ form.captcha }}
+            {# start choose cat #}
+            <div class="row mb-30">
+                <div class="col-md-12">
+                    <div class="d-flex flex-column">
+                        <label for="id_selected_cat">Оберіть категорію</label>
+                        {# TODO modal #}
+                        <div class="col">
+                            <button class="button-3" name="selected_cat" onclick=""
+                                    id="id_selected_cat">Обрати
+                            </button>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            {# end choose cat #}
 
-                <button type="submit" class="button-3" id="submit-btn">Створити</button>
-            </form>
+            {# start description #}
+            <div class="row mb-30">
+                <div class="col-md-12">
+                    <label for="id_description">Опис</label>
+                    <textarea name="description" id="id_description" cols="30" rows="10"
+                              class="form-control"></textarea>
+                </div>
+            </div>
+            {# end description #}
+
+            {# start course_lang_diff_workload #}
+
+            <div class="row mb-30">
+                <div class="col-md-12 ">
+                    <div class="row align-items-baseline">
+                        <div class="col-md-3 me-3">
+                            <div class="d-flex flex-column">
+                            <label for="id_workload">Мова</label>
+                            <select class="nice-select" name="language" tabindex="0">
+                                <option value="0" class="option selected">Українська</option>
+                                <option value="1" class="option ">Англійська</option>
+                                <option value="2" class="option focus">Німецька</option>
+                            </select>
+                                </div>
+
+                        </div>
+                        <div class="col-md-3 me-3">
+                            <div class="d-flex flex-column">
+                            <label for="id_workload">Рівень</label>
+                            <select class="nice-select" name="difficulty" tabindex="0">
+                                <option value="0" class="option selected">Починаючий</option>
+                                <option value="1" class="option ">Середній</option>
+                                <option value="2" class="option focus">Продвинутий</option>
+                            </select>
+                            </div>
+
+                        </div>
+                        <div class="col-md-3  me-3">
+                            <label for="id_workload">Часи у неділю</label>
+                            <input type="text" class="form-control search-input" name="workload" maxlength="255"
+                                   id="id_workload">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {# end course_lang_diff_workload #}
+
+
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const submitBtn = document.getElementById('submit-btn');
-            const captchaContainer = document.getElementById('captcha-container');
-            let captchaVisible = false;
 
-            // Слушаем нажатие на кнопку сабмита
-            submitBtn.addEventListener('click', function (event) {
-
-                if (!captchaVisible) {
-                    event.preventDefault();  // Останавливаем отправку формы
-                    captchaContainer.style.display = 'block';  // Показываем капчу
-                    captchaVisible = true;  // Теперь капча видна
-                }
-            });
-
-        });
-    </script>
 {% endblock %}
