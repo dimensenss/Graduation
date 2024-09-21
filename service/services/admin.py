@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 
-from services.models import Course, Plan, Subscription, CourseModules, Lesson
+from services.models import Course, Plan, Subscription, CourseModules, Lesson, CourseInfo
+
 
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('course_name', 'cat', 'full_price', 'is_published',)
@@ -11,6 +12,7 @@ class CourseAdmin(admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('course_name',)}
 
 admin.site.register(Course, CourseAdmin)
+admin.site.register(CourseInfo)
 admin.site.register(CourseModules)
 admin.site.register(Lesson)
 admin.site.register(Plan)

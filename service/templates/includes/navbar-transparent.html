@@ -23,7 +23,9 @@
                                     <nav>
                                         <ul id="navigation">
                                             <li><a href="{% url 'catalog:catalog' %}">Курси</a></li>
+                                        {% if request.is_authenticated %}
                                             {% has_courses request.user as user_has_courses %}
+                                        {% endif %}
                                             <li>
                                                 <a href="{% if user_has_courses %}{% url 'teach:courses' %}{% else %}{% url 'teach:teach_promo' %}{% endif %}">
                                                     Викладання

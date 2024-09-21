@@ -7625,3 +7625,24 @@ padding: 5px 15px 5px 15px;
 .purple-link:hover{
     color: #d200ea;
 }
+.course-editor-menu{
+    position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px 20px;
+  z-index: 1030;
+  background-color: #dedede;
+  border-top: 1px solid #eee;
+  height: 50px;
+}
+.course-editor-menu-inner{
+display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  max-width: 1400px;
+  padding-right: 0;
+}

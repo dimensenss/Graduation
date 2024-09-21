@@ -48,6 +48,12 @@ class Course(models.Model):
             for sub in self.subscriptions.all():
                 set_sub_price.delay(sub.id)
 
+class CourseInfo(models.Model):
+    course = models.OneToOneField(Course, on_delete=models.CASCADE, related_name='info')
+    workload = models.CharField(max_length=255)
+    authors = models.ManyToManyField(Client, related_name='authors', blank=True)
+    preview_video = models.FileField(upload_to='preview_videos/%Y/%m/%d/', blank=True, null=True)
+
 
 
 class CourseModules(models.Model):

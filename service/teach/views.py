@@ -1,15 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import *
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.views import *
+from rest_framework.generics import *
+from rest_framework.viewsets import ModelViewSet
 
 from catalog.utils import CourseFilter
-from services.models import Course
-from teach.forms import CourseCreateForm
+from services.models import Course, CourseInfo
+from teach.forms import CourseCreateForm, CourseUpdateForm, CourseInfoUpdateForm
 from teach.mixins import OwnerPermissionMixin
+from teach.serializers import CourseUpdateSerializer
+
 
 class TeachPromoView(TemplateView):
     # def dispatch(self, request, *args, **kwargs):
@@ -49,12 +55,28 @@ class TeachCourseCreate(LoginRequiredMixin, CreateView):
         messages.error(self.request, form.errors)
         return super().form_invalid(form)
 
-class TeachCourseEdit(LoginRequiredMixin,OwnerPermissionMixin, UpdateView):
+class TeachCourseEdit(LoginRequiredMixin,OwnerPermissionMixin, DetailView):
     model = Course
-    form_class = CourseCreateForm #CourseUpdateForm
     template_name = 'teach/teach_course_edit.html'
+    context_object_name = 'course'
+    form_class = CourseUpdateForm
+
     def get_object(self, queryset=None):
-        return Course.objects.get(pk=self.kwargs['pk'])
+        return Course.objects.select_related('owner', 'info').get(pk=self.kwargs['pk'])
+
+
+
+    def get(self, request, *args, **kwargs):
+        course = self.get_object()
+        course_info = CourseInfo.objects.get_or_create(course=course)[0]
+
+        return render(request, self.template_name, {
+
+            'course': course,
+        })
+
+
+
 
 class TeachCoursesSearchView(TemplateView):
     template_name = 'teach/includes/teach_included_courses_list.html'
@@ -65,4 +87,18 @@ class TeachCoursesSearchView(TemplateView):
         context = {'courses': filtered_qs.qs}
         html = render_to_string(self.template_name, context)
         return JsonResponse(html, safe=False)
+
+class UpdateCourseView(UpdateAPIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = CourseUpdateSerializer
+    queryset = Course.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)  # Устанавливаем, если это PATCH
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
 

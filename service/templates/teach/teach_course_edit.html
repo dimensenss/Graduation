@@ -5,99 +5,183 @@
 {% block teach_layout %}
     <div class="col-md-9">
         <div class="catalog-main-content">
-            {# start Image video load #}
-            <div class="row mb-30">
-                <div class="col-md-6">
-                    <div class="d-flex bg-dark" style="height: 200px;">
-                        <div class="text-center text-primary">Upload image</div>
+            <div class="col-md-9">
+                <form method="post" action="{% url 'teach:api_course_edit_info' course.id %}" id="course_update"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {# start Image video load #}
+                    <div class="row mb-30">
+
+                        <div class="col-md-6">
+                            <div class="d-flex bg-dark" style="height: 200px;">
+                                <div class="text-center text-primary">Upload image</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex bg-secondary" style="height: 200px;">
+                                <div class="text-center text-primary">Upload preview video</div>
+                            </div>
+                        </div>
+
+
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="d-flex bg-secondary" style="height: 200px;">
-                        <div class="text-center text-primary">Upload preview video</div>
-                    </div>
-                </div>
+                    {# end Image video load #}
 
-            </div>
-            {# end Image video load #}
-
-            {# start title #}
-            <div class="row mb-30">
-                <div class="col-md-12">
-                    <label for="id_course_name">Назва курсу:</label>
-                    <input type="text" class="form-control" name="course_name" maxlength="255"
-                           id="id_course_name">
-                </div>
-            </div>
-            {# end title #}
-
-            {# start choose cat #}
-            <div class="row mb-30">
-                <div class="col-md-12">
-                    <div class="d-flex flex-column">
-                        <label for="id_selected_cat">Оберіть категорію</label>
-                        {# TODO modal #}
-                        <div class="col">
-                            <button class="button-3" name="selected_cat" onclick=""
-                                    id="id_selected_cat">Обрати
-                            </button>
+                    {# start title #}
+                    <div class="row mb-30">
+                        <div class="col-md-12">
+                            <label for="id_course_name">Назва курсу:</label>
+                            <input type="text" class="form-control" name="course_name" maxlength="255"
+                                   id="id_course_name" value="{{ course.course_name }}">
                         </div>
                     </div>
-                </div>
-            </div>
-            {# end choose cat #}
+                    {# end title #}
 
-            {# start description #}
-            <div class="row mb-30">
-                <div class="col-md-12">
-                    <label for="id_description">Опис</label>
-                    <textarea name="description" id="id_description" cols="30" rows="10"
-                              class="form-control"></textarea>
-                </div>
-            </div>
-            {# end description #}
-
-            {# start course_lang_diff_workload #}
-
-            <div class="row mb-30">
-                <div class="col-md-12 ">
-                    <div class="row align-items-baseline">
-                        <div class="col-md-3 me-3">
+                    {# start choose cat #}
+                    <div class="row mb-30">
+                        <div class="col-md-12">
                             <div class="d-flex flex-column">
-                            <label for="id_workload">Мова</label>
-                            <select class="nice-select" name="language" tabindex="0">
-                                <option value="0" class="option selected">Українська</option>
-                                <option value="1" class="option ">Англійська</option>
-                                <option value="2" class="option focus">Німецька</option>
-                            </select>
+                                <label for="id_selected_cat">Оберіть категорію</label>
+                                {# TODO modal #}
+                                <div class="col">
+                                    <button class="button-3" name="selected_cat" onclick=""
+                                            id="id_selected_cat">Обрати
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {# end choose cat #}
+
+                    {# start description #}
+                    <div class="row mb-30">
+                        <div class="col-md-12">
+                            <label for="id_description">Опис</label>
+                            <textarea name="description" id="id_description" cols="30" rows="10"
+                                      class="form-control"></textarea>
+                        </div>
+                    </div>
+                    {# end description #}
+
+                    {# start course_lang_diff_workload #}
+
+                    <div class="row mb-30">
+                        <div class="col-md-12 ">
+                            <div class="row align-items-baseline">
+                                <div class="col-md-3 me-3">
+
+                                    <div class="d-flex flex-column">
+
+
+                                        <label for="id_language">Мова</label>
+                                        <select class="nice-select" name="language" tabindex="0" type="hidden">
+                                            {% for key, value in course.LANG_CHOICES %}
+                                                <option value="{{ key }}"
+                                                        class="option"
+                                                        {% if key == course.language %}selected{% endif %}>{{ value }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3 me-3">
+
+                                    <div class="d-flex flex-column">
+                                        <label for="id_difficulty">Рівень</label>
+                                        <select class="nice-select " name="difficulty" tabindex="0">
+
+                                            {% for key, value in course.DIFFICULTY_CHOICES %}
+                                                <option value="{{ key }}"
+                                                        class="option"
+                                                        {% if key == course.difficulty %}selected{% endif %}>{{ value }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3  me-3">
+                                    <label for="id_workload">Часи у неділю</label>
+                                    <input type="text" class="form-control search-input" name="workload" maxlength="255"
+                                           id="id_workload">
                                 </div>
 
-                        </div>
-                        <div class="col-md-3 me-3">
-                            <div class="d-flex flex-column">
-                            <label for="id_workload">Рівень</label>
-                            <select class="nice-select" name="difficulty" tabindex="0">
-                                <option value="0" class="option selected">Починаючий</option>
-                                <option value="1" class="option ">Середній</option>
-                                <option value="2" class="option focus">Продвинутий</option>
-                            </select>
                             </div>
-
                         </div>
-                        <div class="col-md-3  me-3">
-                            <label for="id_workload">Часи у неділю</label>
-                            <input type="text" class="form-control search-input" name="workload" maxlength="255"
-                                   id="id_workload">
+                    </div>
+                    {# start course_authors #}
+
+                    <div class="row mb-30">
+                        <div class="row">
+                            <h3>Автори</h3>
+                            <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam
+                                animi
+                                aut
+                                harum impedit incidunt
+                                inventore magni numquam omnis quidem totam! Accusantium commodi corporis dignissimos
+                                facilis
+                                illum
+                                laborum molestias suscipit, voluptate.</p>
+                        </div>
+                        <div class="row col-md-6">
+                            {% for cl in course.info.authors.all %}
+                                {{ cl }}
+                            {% endfor %}
+                            <div class="col-md-6">
+                                <input type="text" class="form-control search-input" name="authors" maxlength="255"
+                                       id="id_authors">
+                            </div>
+                            <div class="col-md-6">
+                                <button class="button-3" name="add_author" onclick=""
+                                        id="id_add_author">Додати
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# end course_authors #}
+                    <div class="course-editor-menu">
+                        <div class="course-editor-menu-inner ">
+                            <button type="submit" class="button-3" id="save-button" style="background-color:#38a73a;">
+                                Зберегти зміни
+                            </button>
                         </div>
 
                     </div>
-                </div>
+                </form>
             </div>
-
-            {# end course_lang_diff_workload #}
-
 
         </div>
     </div>
+
+    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>'
+    <script>
+        $(document).ready(function () {
+            $('#course_update').submit(function (event) {
+                event.preventDefault(); // предотвращает стандартное поведение формы
+
+                var formData = new FormData(this); // создаем объект FormData
+
+                $.ajax({
+                    url: "{% url 'teach:api_course_edit_info' course.id %}", // URL для API
+                    type: "PUT", // измените на "POST" если необходимо
+                    data: formData,
+                    processData: false, // не обрабатываем данные
+                    contentType: false, // не устанавливаем заголовок
+                    success: function (response) {
+                        // успешный ответ
+                        alert('Курс обновлен успешно!');
+                        console.log(response);
+                    },
+                    error: function (xhr) {
+                        // обработка ошибок
+                        alert('Ошибка при обновлении курса: ' + xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    </script>
 
 {% endblock %}

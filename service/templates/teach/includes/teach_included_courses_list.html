@@ -28,7 +28,7 @@
                                     </a>
 
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'teach:course_edit' course.id %}">Редагувати
+                                        <li><a class="dropdown-item" href="{% url 'teach:courses' %}">Редагувати
                                             зміст</a></li>
                                         <li><a class="dropdown-item" href="#">Видалити</a></li>
                                     </ul>
@@ -41,7 +41,7 @@
                     <div class="col-md-12">
                         <div class="d-flex flex-column">
 
-                            <a href="edit" class="purple-link">Редагувати опис</a>
+                            <a href="{% url 'teach:course_edit_info' course.id %}" class="purple-link">Редагувати опис</a>
                         </div>
                     </div>
                 </div>
