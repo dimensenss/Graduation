@@ -6,12 +6,11 @@
     <div class="col-md-9">
         <div class="catalog-main-content">
             <div class="col-md-9">
-                <form method="post" action="{% url 'teach:api_course_edit_info' course.id %}" id="course_update"
+                <form method="post" action="{% url 'teach:course-detail' course.id %}" id="course_update"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    {# start Image video load #}
-                    <div class="row mb-30">
 
+                    <div class="row mb-30">
                         <div class="col-md-6">
                             <div class="d-flex bg-dark" style="height: 200px;">
                                 <div class="text-center text-primary">Upload image</div>
@@ -22,95 +21,61 @@
                                 <div class="text-center text-primary">Upload preview video</div>
                             </div>
                         </div>
-
-
                     </div>
-                    {# end Image video load #}
 
-                    {# start title #}
                     <div class="row mb-30">
                         <div class="col-md-12">
                             <label for="id_course_name">Назва курсу:</label>
                             <input type="text" class="form-control" name="course_name" maxlength="255"
                                    id="id_course_name" value="{{ course.course_name }}">
+                            <div class="error-container" id="error_id_course_name"></div>  <!-- Контейнер для ошибок -->
                         </div>
                     </div>
-                    {# end title #}
 
-                    {# start choose cat #}
-                    <div class="row mb-30">
-                        <div class="col-md-12">
-                            <div class="d-flex flex-column">
-                                <label for="id_selected_cat">Оберіть категорію</label>
-                                {# TODO modal #}
-                                <div class="col">
-                                    <button class="button-3" name="selected_cat" onclick=""
-                                            id="id_selected_cat">Обрати
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {# end choose cat #}
-
-                    {# start description #}
                     <div class="row mb-30">
                         <div class="col-md-12">
                             <label for="id_description">Опис</label>
                             <textarea name="description" id="id_description" cols="30" rows="10"
-                                      class="form-control"></textarea>
+                                      class="form-control">{{ course.description }}</textarea>
+                            <div class="error-container" id="error_id_description"></div>  <!-- Контейнер для ошибок -->
                         </div>
                     </div>
-                    {# end description #}
-
-                    {# start course_lang_diff_workload #}
 
                     <div class="row mb-30">
                         <div class="col-md-12 ">
                             <div class="row align-items-baseline">
                                 <div class="col-md-3 me-3">
-
-                                    <div class="d-flex flex-column">
-
-
-                                        <label for="id_language">Мова</label>
-                                        <select class="nice-select" name="language" tabindex="0" type="hidden">
-                                            {% for key, value in course.LANG_CHOICES %}
-                                                <option value="{{ key }}"
-                                                        class="option"
-                                                        {% if key == course.language %}selected{% endif %}>{{ value }}</option>
-                                            {% endfor %}
-
-                                        </select>
-                                    </div>
-
+                                    <label for="id_language">Мова</label>
+                                    <select class="nice-select" name="language" tabindex="0">
+                                        {% for key, value in course.LANG_CHOICES %}
+                                            <option value="{{ key }}"
+                                                    class="option"
+                                                    {% if key == course.language %}selected{% endif %}>{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="error-container" id="error_language"></div><!-- Контейнер для ошибок -->
                                 </div>
                                 <div class="col-md-3 me-3">
-
-                                    <div class="d-flex flex-column">
-                                        <label for="id_difficulty">Рівень</label>
-                                        <select class="nice-select " name="difficulty" tabindex="0">
-
-                                            {% for key, value in course.DIFFICULTY_CHOICES %}
-                                                <option value="{{ key }}"
-                                                        class="option"
-                                                        {% if key == course.difficulty %}selected{% endif %}>{{ value }}</option>
-                                            {% endfor %}
-
-                                        </select>
-                                    </div>
-
+                                    <label for="id_difficulty">Рівень</label>
+                                    <select class="nice-select" name="difficulty" tabindex="0">
+                                        {% for key, value in course.DIFFICULTY_CHOICES %}
+                                            <option value="{{ key }}"
+                                                    class="option"
+                                                    {% if key == course.difficulty %}selected{% endif %}>{{ value }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="error-container" id="error_difficulty"></div>
+                                    <!-- Контейнер для ошибок -->
                                 </div>
-                                <div class="col-md-3  me-3">
+                                <div class="col-md-3 me-3">
                                     <label for="id_workload">Часи у неділю</label>
-                                    <input type="text" class="form-control search-input" name="workload" maxlength="255"
-                                           id="id_workload">
+                                    <input type="text" class="form-control" name="workload" maxlength="255"
+                                           id="id_workload" value="{{ course.info.workload }}" style="height: 42px;">
+                                    <div class="error-container" id="error_workload"></div><!-- Контейнер для ошибок -->
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                    {# start course_authors #}
 
                     <div class="row mb-30">
                         <div class="row">
@@ -125,37 +90,42 @@
                                 laborum molestias suscipit, voluptate.</p>
                         </div>
                         <div class="row col-md-6">
-                            {% for cl in course.info.authors.all %}
-                                {{ cl }}
-                            {% endfor %}
+                            <div id="authors-container" class="mt-3">
+                                {% for author in course.info.authors.all %}
+
+                                    <div class="author-card">
+                                        <h5>{{author.first_name}} {{author.last_name }}</h5>
+                                        <p>Email: {{ author.email }}</p>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
                             <div class="col-md-6">
-                                <input type="text" class="form-control search-input" name="authors" maxlength="255"
-                                       id="id_authors">
+                                <input type="text" class="form-control search-input" name="authors" id="id_authors">
+                                <div class="error-container" id="error_authors"></div>  <!-- Контейнер для ошибок -->
                             </div>
                             <div class="col-md-6">
-                                <button class="button-3" name="add_author" onclick=""
-                                        id="id_add_author">Додати
+                                <button class="button-3" name="add_author" id="id_add_author" type="button">Додати
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    {# end course_authors #}
                     <div class="course-editor-menu">
                         <div class="course-editor-menu-inner ">
                             <button type="submit" class="button-3" id="save-button" style="background-color:#38a73a;">
                                 Зберегти зміни
                             </button>
                         </div>
-
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 
-    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>'
+    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
     <script>
         $(document).ready(function () {
             $('#course_update').submit(function (event) {
@@ -164,24 +134,78 @@
                 var formData = new FormData(this); // создаем объект FormData
 
                 $.ajax({
-                    url: "{% url 'teach:api_course_edit_info' course.id %}", // URL для API
+                    url: "{% url 'teach:course-detail' course.id %}", // URL для API
                     type: "PUT", // измените на "POST" если необходимо
                     data: formData,
                     processData: false, // не обрабатываем данные
                     contentType: false, // не устанавливаем заголовок
                     success: function (response) {
-                        // успешный ответ
-                        alert('Курс обновлен успешно!');
-                        console.log(response);
+                        $('#jq-notification').text('Курс оновлено').removeClass('d-none'); // Отобразить уведомление
+                        $('#jq-notification').fadeIn().delay(3000).fadeOut(); // Показать уведомление на 3 секунды
+                        console.log('succsess');
                     },
                     error: function (xhr) {
-                        // обработка ошибок
-                        alert('Ошибка при обновлении курса: ' + xhr.responseText);
+                        // Обработка ошибок
+                        if (xhr.status === 400) {
+                            var errors = xhr.responseJSON;
+
+                            // Очистка существующих сообщений об ошибках
+                            $('.error-container').empty();
+
+                            $.each(errors, function (field, messages) {
+                                var errorContainer = $('#error_' + field);  // Найти контейнер для ошибок
+                                if (errorContainer.length) {
+                                    errorContainer.append('<div class="form-error-1 text-danger">' + messages.join(', ') + '</div>');
+                                }
+                            });
+                        }
                     }
                 });
             });
-        });
 
+            document.getElementById('id_add_author').onclick = function () {
+                $('.error-container').empty();
+                var author = document.getElementById("id_authors").value;
+                $.ajax({
+                    url: "{% url 'teach:course-update-authors' course.id %}", // URL для API
+                    type: "PUT", // измените на "POST" если необходимо
+                    data: {authors: author},
+                    success: function (response) {
+                        var authorsContainer = $('#authors-container');
+                        authorsContainer.empty(); // Очищаем контейнер перед добавлением новых данных
+
+                        // Проходим по каждому автору и добавляем его данные в контейнер
+                        $.each(response.authors, function (index, author) {
+                            var authorHtml = `
+                            <div class="author-card">
+                                <h5>${author.first_name} ${author.last_name}</h5>
+                                <p>Email: ${author.email}</p>
+                            </div>
+                        `;
+                            authorsContainer.append(authorHtml); // Добавляем карточку автора в контейнер
+                        });
+                        $('#jq-notification').text('Автора додано').removeClass('d-none'); // Отобразить уведомление
+                        $('#jq-notification').fadeIn().delay(3000).fadeOut(); // Показать уведомление на 3 секунды
+                    },
+                    error: function (xhr) {
+                        // Обработка ошибок
+                        if (xhr.status === 400) {
+                            var errors = xhr.responseJSON;
+
+                            // Очистка существующих сообщений об ошибках
+                            $('.error-container').empty();
+
+                            $.each(errors, function (field, messages) {
+                                var errorContainer = $('#error_' + field);  // Найти контейнер для ошибок
+                                if (errorContainer.length) {
+                                    errorContainer.append('<div class="form-error-1 text-danger">' + messages.join(', ') + '</div>');
+                                }
+                            });
+                        }
+                    }
+                });
+            };
+        });
     </script>
 
 {% endblock %}

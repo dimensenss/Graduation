@@ -12,7 +12,7 @@
                     {% csrf_token %}
                     <label for="id_email" class="form-label">Email:</label>
                     {% if form.email.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.email.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -24,7 +24,7 @@
 
                     <label for="id_first_name" class="form-label">first_name:</label>
                     {% if form.first_name.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.first_name.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -37,7 +37,7 @@
 
                     <label for="id_last_name" class="form-label">last_name:</label>
                     {% if form.last_name.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.last_name.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -49,7 +49,7 @@
 
                     <label for="id_password" class="form-label">password:</label>
                     {% if form.password.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.password.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -61,7 +61,7 @@
 
                     <label for="id_password_confirm" class="form-label">password_confirm:</label>
                     {% if form.password_confirm.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.password_confirm.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>

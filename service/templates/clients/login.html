@@ -19,7 +19,7 @@
                 
                     <label for="id_username" class="form-label">Email:</label>
                     {% if form.username.errors %}
-                        <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                        <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                             <div class="form-error-1 text-center">{{ form.username.errors }}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -33,7 +33,7 @@
                     <div class="mb-3">
                         <label for="id_password" class="form-label">Введіть пароль</label>
                         {% if form.password.errors %}
-                            <div class="alert alert-danger alert-dismissible pb-0" role="alert">
+                            <div class="alert alert-danger alert-dismissible pb-0" role="alert" style="top:50px;">
                                 <div class="form-error-1 text-center">{{ form.password.errors }}</div>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>

@@ -26,12 +26,15 @@
                                         <ul id="navigation">
                                             <li><a href="{% url 'catalog:catalog' %}">Курси</a></li>
                                             {% cache 3600 'have_courses-{{ request.user.id }}' %}
-                                            {% has_courses request.user as user_has_courses %}
-                                            <li>
-                                                <a href="{% if user_has_courses %}{% url 'teach:courses' %}{% else %}{% url 'teach:teach_promo' %}{% endif %}">
-                                                    Викладання
-                                                </a>
-                                            </li>
+                                                {% if request.is_authenticated %}
+                                                    {% has_courses request.user as user_has_courses %}
+                                                {% endif %}
+                                                <li>
+                                                    <a href="
+                                                            {% if user_has_courses %}{% url 'teach:courses' %}{% else %}{% url 'teach:teach_promo' %}{% endif %}">
+                                                        Викладання
+                                                    </a>
+                                                </li>
                                             {% endcache %}
                                             <li><a href="contact.html">Співробітництво</a></li>
                                             <!-- Button -->
@@ -41,8 +44,8 @@
                                                         href="{% url 'clients:register' %}"
                                                         class="btn btn3">Регістрація</a>
                                                 </li>
-                                                <li ><a href="{% url 'clients:login' %}"
-                                                                             class="btn btn3">Вхід</a>
+                                                <li><a href="{% url 'clients:login' %}"
+                                                       class="btn btn3">Вхід</a>
                                                 </li>
                                             {% else %}
                                                 <li><a href="{% url 'clients:logout' %}">Вихід</a>
