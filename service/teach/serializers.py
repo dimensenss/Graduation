@@ -70,12 +70,16 @@ from rest_framework import serializers
 #                   'preview', 'preview_video', 'authors', 'workload']
 
 
-
+def validate_preview_size(value):
+    limit = 5 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('Розмір файла не повинен перевищувати 5MB.')
 
 class CourseUpdateSerializer(serializers.ModelSerializer):
     workload = serializers.IntegerField(source='info.workload', required=False, validators=[MinValueValidator(0)])
     authors = serializers.CharField(source='info.authors', required=False)
-    preview_video = serializers.FileField(source='info.preview_video', required=False)
+    preview_video = serializers.URLField(source='info.preview_video', required=False)
+    preview = serializers.ImageField(required=False, validators=[validate_preview_size])  # Добавление кастомного валидатора
 
     class Meta:
         model = Course

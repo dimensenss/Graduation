@@ -12,14 +12,26 @@
 
                     <div class="row mb-30">
                         <div class="col-md-6">
-                            <div class="d-flex bg-dark" style="height: 200px;">
-                                <div class="text-center text-primary">Upload image</div>
+                            <div id="image-box"
+                                 class="upload-box {% if not course.preview %}upload-box-border {% endif %}mb-3">
+                                {% if course.preview %}
+                                    <img id="imagePreview" src="{{ course.preview.url }}" alt="{{ course.course_name }}"
+                                         class="img-fluid rounded" style="height: 200px; width: 200px;">
+                                {% else %}
+                                    <div class="text-center">Завантажте прев'ю курса</div>
+                                    <img id="imagePreview" src="" alt="imagePreview" class="d-none">
+                                {% endif %}
+                                <span class="upload-image-placeholder d-block"></span>
                             </div>
+                            <input type="file" id="id_preview" class="form-control" name="preview" accept="image/*">
+                            <div class="error-container" id="error_preview"></div>
                         </div>
                         <div class="col-md-6">
-                            <div class="d-flex bg-secondary" style="height: 200px;">
-                                <div class="text-center text-primary">Upload preview video</div>
+                            <div id="video-box" class="upload-box {% if not course.preview_video %}upload-box-border {% endif %}mb-3">
+                                <span class="upload-video-placeholder d-block">🎥</span>
                             </div>
+                            <input class="form-control" type="text" id="id_preview_video" name="preview_video">
+
                         </div>
                     </div>
 
@@ -28,7 +40,7 @@
                             <label for="id_course_name">Назва курсу:</label>
                             <input type="text" class="form-control" name="course_name" maxlength="255"
                                    id="id_course_name" value="{{ course.course_name }}">
-                            <div class="error-container" id="error_id_course_name"></div>  <!-- Контейнер для ошибок -->
+                            <div class="error-container" id="error_course_name"></div>  <!-- Контейнер для ошибок -->
                         </div>
                     </div>
 
@@ -37,7 +49,7 @@
                             <label for="id_description">Опис</label>
                             <textarea name="description" id="id_description" cols="30" rows="10"
                                       class="form-control">{{ course.description }}</textarea>
-                            <div class="error-container" id="error_id_description"></div>  <!-- Контейнер для ошибок -->
+                            <div class="error-container" id="error_description"></div>  <!-- Контейнер для ошибок -->
                         </div>
                     </div>
 
@@ -92,21 +104,26 @@
                         <div class="row col-md-6">
                             <div id="authors-container" class="mt-3">
                                 {% for author in course.info.authors.all %}
-
-                                    <div class="author-card">
-                                        <h5>{{author.first_name}} {{author.last_name }}</h5>
-                                        <p>Email: {{ author.email }}</p>
-
+                                    <div class="d-flex flex-column">
+                                        <div class="row">
+                                            <h5>{{ author.first_name }} {{ author.last_name }}</h5>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-11">
+                                                <p>Email: {{ author.email }}</p>
+                                            </div>
+                                            <div class="col-1">
+                                                <a data-author-id="{{ author.id }}">✕</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 {% endfor %}
                             </div>
 
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control search-input" name="authors" id="id_authors">
+                            <div class="d-flex justify-content-between">
+                                <input type="text" class="form-control search-input me-3" name="authors"
+                                       id="id_authors">
                                 <div class="error-container" id="error_authors"></div>  <!-- Контейнер для ошибок -->
-                            </div>
-                            <div class="col-md-6">
                                 <button class="button-3" name="add_author" id="id_add_author" type="button">Додати
                                 </button>
                             </div>
@@ -114,23 +131,25 @@
                     </div>
 
                     <div class="course-editor-menu">
-                        <div class="course-editor-menu-inner ">
+                        <div class="course-editor-menu-inner">
                             <button type="submit" class="button-3" id="save-button" style="background-color:#38a73a;">
                                 Зберегти зміни
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
     </div>
+
 
     <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
     <script>
         $(document).ready(function () {
             $('#course_update').submit(function (event) {
                 event.preventDefault(); // предотвращает стандартное поведение формы
-
+                $('.error-container').empty();
                 var formData = new FormData(this); // создаем объект FormData
 
                 $.ajax({
@@ -148,6 +167,7 @@
                         // Обработка ошибок
                         if (xhr.status === 400) {
                             var errors = xhr.responseJSON;
+                            console.log(errors);
 
                             // Очистка существующих сообщений об ошибках
                             $('.error-container').empty();
@@ -163,11 +183,10 @@
                 });
             });
 
-            document.getElementById('id_add_author').onclick = function () {
-                $('.error-container').empty();
-                var author = document.getElementById("id_authors").value;
+
+            function updateAuthors(url, author, succses_text) {
                 $.ajax({
-                    url: "{% url 'teach:course-update-authors' course.id %}", // URL для API
+                    url: url, // URL для API
                     type: "PUT", // измените на "POST" если необходимо
                     data: {authors: author},
                     success: function (response) {
@@ -177,26 +196,35 @@
                         // Проходим по каждому автору и добавляем его данные в контейнер
                         $.each(response.authors, function (index, author) {
                             var authorHtml = `
-                            <div class="author-card">
-                                <h5>${author.first_name} ${author.last_name}</h5>
-                                <p>Email: ${author.email}</p>
-                            </div>
+                             <div class="d-flex flex-column">
+                                        <div class="row">
+                                            <h5>${author.first_name} ${author.last_name}</h5>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-11">
+                                                <p>Email: ${author.email}</p>
+                                            </div>
+                                            <div class="col-1">
+                                                <a data-author-id=${author.id}>✕
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                         `;
                             authorsContainer.append(authorHtml); // Добавляем карточку автора в контейнер
                         });
-                        $('#jq-notification').text('Автора додано').removeClass('d-none'); // Отобразить уведомление
+                        $('#jq-notification').text(succses_text).removeClass('d-none'); // Отобразить уведомление
                         $('#jq-notification').fadeIn().delay(3000).fadeOut(); // Показать уведомление на 3 секунды
                     },
                     error: function (xhr) {
-                        // Обработка ошибок
+
                         if (xhr.status === 400) {
                             var errors = xhr.responseJSON;
-
-                            // Очистка существующих сообщений об ошибках
                             $('.error-container').empty();
 
                             $.each(errors, function (field, messages) {
-                                var errorContainer = $('#error_' + field);  // Найти контейнер для ошибок
+                                var errorContainer = $('#error_' + field);
                                 if (errorContainer.length) {
                                     errorContainer.append('<div class="form-error-1 text-danger">' + messages.join(', ') + '</div>');
                                 }
@@ -204,7 +232,58 @@
                         }
                     }
                 });
+            }
+
+
+            document.getElementById('id_add_author').onclick = function () {
+                $('.error-container').empty();
+                var author = document.getElementById("id_authors").value;
+                var url = "{% url 'teach:course-update-authors' course.id %}";
+                updateAuthors(url, author, 'Автора додано');
             };
+
+            $(document).on('click', 'a[data-author-id]', function () {
+                var author = $(this).data('author-id');
+                var url = "{% url 'teach:course-delete-authors' course.id %}";
+                updateAuthors(url, author, 'Автора видалено');
+
+
+            });
+            document.getElementById('id_preview').addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById('imagePreview').src = e.target.result;
+                        document.getElementById('imagePreview').classList.remove('d-none');
+                        document.getElementById('imagePreview').classList.add('img-fluid');
+                        document.querySelector('.upload-image-placeholder').classList.add('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            {#document.getElementById('id_preview_video').addEventListener('change', function (event) {#}
+            {#    const file = event.target.files[0];#}
+            {#    if (file) {#}
+            {#        const progressBar = document.getElementById('videoProgress');#}
+            {#        progressBar.classList.remove('d-none');#}
+            {#        const progressElement = progressBar.querySelector('.progress-bar');#}
+            {##}
+            {#        // Фейковый прогресс для примера#}
+            {#        let progress = 0;#}
+            {#        const interval = setInterval(function () {#}
+            {#            progress += 10;#}
+            {#            progressElement.style.width = progress + '%';#}
+            {#            progressElement.setAttribute('aria-valuenow', progress);#}
+            {#            if (progress >= 100) {#}
+            {#                clearInterval(interval);#}
+            {#                document.querySelector('.upload-video-placeholder').classList.add('d-none');#}
+            {#            }#}
+            {#        }, 300);#}
+            {#    }#}
+            {# });#}
+
+
         });
     </script>
 

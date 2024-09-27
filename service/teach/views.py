@@ -124,3 +124,14 @@ class UpdateCourseView(ModelViewSet):
         except ValueError as e:
             return Response({"authors": [str(e)]}, status=400)  # Вернуть ошибку как список
         return JsonResponse({'authors': ClientSerializer(instance.info.authors.all(), many=True).data})
+
+
+    @action(methods=['PUT'], detail=True)
+    def delete_authors(self, request, *args, **kwargs):
+        instance = self.get_object()
+        data = request.data.get('authors')
+        try:
+            self.service.update_authors(instance.info, data, is_delete=True)
+        except ValueError as e:
+            return Response({"info": [str(e)]}, status=400)  # Вернуть ошибку как список
+        return JsonResponse({'authors': ClientSerializer(instance.info.authors.all(), many=True).data})

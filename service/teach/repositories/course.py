@@ -1,5 +1,6 @@
 from clients.models import Client
 from services.models import Course
+# from teach.tasks import compress_video
 
 
 class CourseRepository:
@@ -14,15 +15,18 @@ class CourseRepository:
             setattr(instance, field, value)
         instance.save()
 
-    def update_related_authors(self, course_info, authors):
+    def update_related_authors(self, course_info, authors, is_delete=False):
         if authors:
-
             if not Client.objects.filter(id=authors).exists():
                 raise ValueError(f"Автора с ID {authors} не знайдено.")
 
             exsisting_authors = set(course_info.authors.all().values_list('id', flat=True))
             new_authors = exsisting_authors.copy()
-            new_authors.add(int(authors))
+
+            if is_delete:
+                new_authors.remove(int(authors))
+            else:
+                new_authors.add(int(authors))
 
             if new_authors != exsisting_authors:
                 course_info.authors.set(list(new_authors))
@@ -32,6 +36,10 @@ class CourseRepository:
         try:
             if 'authors' in info_data:
                 self.update_related_authors(course_info, info_data.pop('authors'))
+            # if 'preview_video' in info_data:
+            #     video = info_data.pop('preview_video')
+            #     compress_video(course_info.id, video.temporary_file_path())
+
         except ValueError:
             pass
 

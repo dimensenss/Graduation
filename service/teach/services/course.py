@@ -13,5 +13,5 @@ class CourseService:
 
         return course
 
-    def update_authors(self, course_info, authors):
-        self.repository.update_related_authors(course_info, authors)
+    def update_authors(self, course_info, authors, is_delete=False):
+        self.repository.update_related_authors(course_info, authors, is_delete)
