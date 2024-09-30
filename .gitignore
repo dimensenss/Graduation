@@ -2,3 +2,4 @@
 service/.env
 general.log
 service/general.log
+service/media

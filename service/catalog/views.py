@@ -39,7 +39,7 @@ class CatalogListView(ListView):
         return context
 
 class SearchView(TemplateView):
-    template_name = 'catalog/includes/courses_list.html'
+    template_name = 'includes/courses_list.html'
     def get(self, request, *args, **kwargs):
         courses = Course.objects.filter(is_published=True).select_related('owner')
         filtered_qs = CourseFilter(self.request.GET, queryset=courses)
@@ -51,7 +51,7 @@ class SearchView(TemplateView):
 
 
 class GetCoursesView(TemplateView):
-    template_name = 'catalog/includes/courses_slider.html'
+    template_name = 'includes/courses_slider.html'
 
     def get(self, request, *args, **kwargs):
         cat_id = request.GET.get('cat_id')

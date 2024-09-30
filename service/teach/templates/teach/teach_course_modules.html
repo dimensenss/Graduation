@@ -1,0 +1,58 @@
+{% extends 'teach/teach_base.html' %}
+
+{% load static %}
+
+{% block teach_layout %}
+    <div class="col-md-9">
+    {{ request.user }}
+        <div class="catalog-main-content">
+            <div id="modules-container">
+            {% if not modules %}
+                <p>Ще нічого не створено</p>
+                <button type="button" name="create-module">Створити</button>
+            {% endif %}
+
+
+                {% for module in course.modules.all %}
+                    {% include 'includes/teach_module_form.html' with module=module %}
+
+                        <ul id="lessons-list-{{ module.id }}">
+                            {% for lesson in module.lessons.all %}
+                                <li>{{ lesson.title }}</li>
+                            {% endfor %}
+                        </ul>
+
+                {% endfor %}
+            <button type="button" name="create-module">Створити</button>
+            </div>
+        </div>
+    </div>
+
+   <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('button[name="create-module"]').click(function (event) {
+                event.preventDefault();
+                console.log('start');
+
+                $.ajax({
+                    url: "{% url 'teach:coursemodules-detail' course.id %}", // URL для API
+                    type: "POST",
+                    data: null,
+                    headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log('response');
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

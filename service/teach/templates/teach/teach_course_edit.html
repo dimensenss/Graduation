@@ -1,6 +1,6 @@
 {% extends 'teach/teach_base.html' %}
 
-{% load static %}
+{% load static teach_tags %}
 
 {% block teach_layout %}
     <div class="col-md-9">
@@ -10,29 +10,41 @@
                       enctype="multipart/form-data">
                     {% csrf_token %}
 
-                    <div class="row mb-30">
+                    <div class="row mb-50">
                         <div class="col-md-6">
                             <div id="image-box"
                                  class="upload-box {% if not course.preview %}upload-box-border {% endif %}mb-3">
                                 {% if course.preview %}
                                     <img id="imagePreview" src="{{ course.preview.url }}" alt="{{ course.course_name }}"
-                                         class="img-fluid rounded" style="height: 200px; width: 200px;">
+                                         class="preview-img img-fluid rounded ">
                                 {% else %}
                                     <div class="text-center">Завантажте прев'ю курса</div>
                                     <img id="imagePreview" src="" alt="imagePreview" class="d-none">
                                 {% endif %}
                                 <span class="upload-image-placeholder d-block"></span>
                             </div>
-                            <input type="file" id="id_preview" class="form-control" name="preview" accept="image/*">
+                        <div class="mb-20">
+                            <input type="file" id="id_preview" class="form-control " name="preview" accept="image/*">
+                            </div>
                             <div class="error-container" id="error_preview"></div>
                         </div>
                         <div class="col-md-6">
-                            <div id="video-box" class="upload-box {% if not course.preview_video %}upload-box-border {% endif %}mb-3">
-                                <span class="upload-video-placeholder d-block">🎥</span>
+                            <div id="video-box"
+                                 class="upload-box {% if not course.info.preview_video %}upload-box-border {% endif %}mb-3">
+                                {% if not course.info.preview_video %}
+                                    <span class="upload-video-placeholder d-block">🎥</span>
+                                {% else %}
+                                    <iframe id="youtubePlayer" width="100%" height="315"
+                                            src="https://www.youtube.com/embed/{% get_youtube_thumbnail_url course.info.preview_video %}"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowfullscreen></iframe>
+                                {% endif %}
                             </div>
-                            <input class="form-control" type="text" id="id_preview_video" name="preview_video">
-
+                            <input class="form-control" type="text" id="id_preview_video" name="preview_video"
+                                   value="{{ course.info.preview_video }}" placeholder="Введите ссылку на YouTube">
                         </div>
+
                     </div>
 
                     <div class="row mb-30">
@@ -262,26 +274,31 @@
                     reader.readAsDataURL(file);
                 }
             });
-            {#document.getElementById('id_preview_video').addEventListener('change', function (event) {#}
-            {#    const file = event.target.files[0];#}
-            {#    if (file) {#}
-            {#        const progressBar = document.getElementById('videoProgress');#}
-            {#        progressBar.classList.remove('d-none');#}
-            {#        const progressElement = progressBar.querySelector('.progress-bar');#}
-            {##}
-            {#        // Фейковый прогресс для примера#}
-            {#        let progress = 0;#}
-            {#        const interval = setInterval(function () {#}
-            {#            progress += 10;#}
-            {#            progressElement.style.width = progress + '%';#}
-            {#            progressElement.setAttribute('aria-valuenow', progress);#}
-            {#            if (progress >= 100) {#}
-            {#                clearInterval(interval);#}
-            {#                document.querySelector('.upload-video-placeholder').classList.add('d-none');#}
-            {#            }#}
-            {#        }, 300);#}
-            {#    }#}
-            {# });#}
+
+            function getYouTubeVideoId(url) {
+                var pattern = /(?:v=|\/)([0-9A-Za-z_-]{11}).*/;
+                var match = url.match(pattern);
+                return match ? match[1] : null;
+            }
+
+            // Функция для вставки плеера YouTube
+            function updateYouTubePlayer(videoUrl) {
+                var videoId = getYouTubeVideoId(videoUrl);
+                if (videoId) {
+                    var embedUrl = "https://www.youtube.com/embed/" + videoId;
+                    var iframeHtml = '<iframe id="youtubePlayer" width="100%" height="315" src="' + embedUrl +
+                        '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                    $('#video-box').html(iframeHtml);  // Вставляем плеер
+                } else {
+                    $('#video-box').html('<span class="upload-video-placeholder d-block">🎥</span>'); // Если невалидная ссылка
+                }
+            }
+
+            // Отслеживаем изменения в поле с ссылкой на видео
+            $('#id_preview_video').on('input', function () {
+                var videoUrl = $(this).val();
+                updateYouTubePlayer(videoUrl);
+            });
 
 
         });

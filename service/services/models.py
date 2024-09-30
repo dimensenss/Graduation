@@ -20,7 +20,6 @@ class Course(models.Model):
     )
     owner = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='courses')
     course_name = models.CharField(max_length=255)
-    # slug=models.SlugField(max_length=255, unique=True)
     description = models.CharField(max_length=1024, blank=True, null=True)
     cat = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='courses', null=True, blank=True)
     full_price = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
@@ -58,7 +57,7 @@ class CourseInfo(models.Model):
 
 class CourseModules(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     order = models.PositiveIntegerField(default=0)  # Порядок отображения
 
@@ -77,7 +76,7 @@ class Lesson(models.Model):
     video_url = models.URLField(blank=True, null=True)  # URL для видео
 
     def __str__(self):
-        return f'Course: {self.course} - Cat: {self.course_subcategory} - Lesson: {self.title}'
+        return f'Course: {self.course} - Lesson: {self.title}'
 
 
 # class TextTest(models.Model):

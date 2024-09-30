@@ -7,13 +7,14 @@ from django.urls import reverse_lazy
 from django.views.generic import *
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import *
 from rest_framework.generics import *
 from rest_framework.viewsets import ModelViewSet
 
 from catalog.utils import CourseFilter
 from clients.serializers import ClientSerializer
-from services.models import Course, CourseInfo
+from services.models import Course, CourseInfo, CourseModules
 from teach.forms import CourseCreateForm, CourseUpdateForm, CourseInfoUpdateForm
 from teach.mixins import OwnerPermissionMixin
 from teach.repositories.course import CourseRepository
@@ -64,7 +65,7 @@ class TeachCourseCreate(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class TeachCourseEdit(LoginRequiredMixin, OwnerPermissionMixin, DetailView):
+class TeachCourseInfoEditView(LoginRequiredMixin, OwnerPermissionMixin, DetailView):
     model = Course
     template_name = 'teach/teach_course_edit.html'
     context_object_name = 'course'
@@ -83,8 +84,9 @@ class TeachCourseEdit(LoginRequiredMixin, OwnerPermissionMixin, DetailView):
         })
 
 
+
 class TeachCoursesSearchView(TemplateView):
-    template_name = 'teach/includes/teach_included_courses_list.html'
+    template_name = 'includes/teach_included_courses_list.html'
 
     def get(self, request, *args, **kwargs):
         courses = Course.objects.filter(owner=self.request.user).only('id', 'course_name', 'preview', 'is_published')
@@ -96,6 +98,7 @@ class TeachCoursesSearchView(TemplateView):
 
 
 class UpdateCourseView(ModelViewSet):
+    permission_classes = (IsAuthenticated, OwnerPermissionMixin)
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = CourseUpdateSerializer
     queryset = Course.objects.all()

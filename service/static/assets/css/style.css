@@ -132,7 +132,10 @@ body {
     font-family: "Mulish", sans-serif;
     font-weight: normal;
     font-style: normal;
-    font-size: 16px
+    font-size: 16px;
+    min-width: 320px;
+    height: 100%;
+    margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -7675,13 +7678,13 @@ b, sup, sub, u, del {
 }
 
 .upload-box {
-    width: 200px;
-    height: 200px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.3s ease;
+   width: auto;
+  height: auto;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease;
 }
 .upload-box-border{
     border: 2px dashed #ccc;
@@ -7699,4 +7702,15 @@ b, sup, sub, u, del {
 .upload-video-placeholder {
     font-size: 2rem;
     color: #ccc;
+}
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+}
+.preview-img{
+    height: 315px;
+  width: 365px;
+  object-fit: cover;
 }
