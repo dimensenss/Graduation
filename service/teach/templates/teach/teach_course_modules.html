@@ -4,17 +4,14 @@
 
 {% block teach_layout %}
     <div class="col-md-9">
-    {{ request.user }}
         <div class="catalog-main-content">
             <div id="modules-container">
-            {% if not modules %}
-                <p>Ще нічого не створено</p>
-                <button type="button" name="create-module">Створити</button>
-            {% endif %}
-
-
-                {% for module in course.modules.all %}
-                    {% include 'includes/teach_module_form.html' with module=module %}
+                {% if not modules %}
+                    <p>Ще нічого не створено</p>
+                    <button type="button" name="create-module">Створити</button>
+                {% else %}
+                    {% for module in modules %}
+                        {% include 'includes/teach_module_form.html' with module=module %}
 
                         <ul id="lessons-list-{{ module.id }}">
                             {% for lesson in module.lessons.all %}
@@ -22,30 +19,52 @@
                             {% endfor %}
                         </ul>
 
-                {% endfor %}
-            <button type="button" name="create-module">Створити</button>
+                    {% endfor %}
+
+                {% endif %}
             </div>
+<button type="button" name="create-module">Створити</button>
         </div>
     </div>
 
-   <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
     <script>
+
+
         $(document).ready(function () {
+            // Функция для извлечения CSRF-токена из cookies
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    let cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i].trim();
+                        // Если cookie начинается с имени "name", возвращаем его значение
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            let csrftoken = getCookie('csrftoken');
+
             $('button[name="create-module"]').click(function (event) {
                 event.preventDefault();
-                console.log('start');
 
                 $.ajax({
-                    url: "{% url 'teach:coursemodules-detail' course.id %}", // URL для API
+                    url: "{% url 'teach:coursemodules-detail' course.id %}",
                     type: "POST",
                     data: null,
                     headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
+                        'X-CSRFToken': csrftoken  // Используем извлеченный CSRF-токен
+                    },
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                        console.log('response');
+                         $('#modules-container').append(response.module_form);
                     },
                     error: function (xhr) {
                         console.log(xhr);
@@ -53,6 +72,7 @@
                 });
             });
         });
+
     </script>
 
 {% endblock %}

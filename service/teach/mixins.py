@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 class OwnerPermissionMixin:
     def has_permission(self):
-        return bool(self.request.user == self.get_object().owner)
+        return bool(self.request.user == self.get_course().owner)
 
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permission():

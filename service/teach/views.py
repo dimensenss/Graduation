@@ -71,15 +71,14 @@ class TeachCourseInfoEditView(LoginRequiredMixin, OwnerPermissionMixin, DetailVi
     context_object_name = 'course'
     form_class = CourseUpdateForm
 
-    def get_object(self, queryset=None):
+    def get_course(self, queryset=None):
         return Course.objects.select_related('owner', 'info').get(pk=self.kwargs['pk'])
 
     def get(self, request, *args, **kwargs):
-        course = self.get_object()
-        course_info = CourseInfo.objects.get_or_create(course=course)[0]
+        course = self.get_course()
+        _ = CourseInfo.objects.get_or_create(course=course)[0]
 
         return render(request, self.template_name, {
-
             'course': course,
         })
 

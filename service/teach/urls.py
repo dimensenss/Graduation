@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from teach.modules import TeachCourseModulesView, CreateModuleAPI
+from teach.course_content_edit import TeachCourseModulesView, CreateModuleAPI
 from teach.views import *
 
 app_name = 'teach'
@@ -19,7 +19,7 @@ urlpatterns = [
     path('courses/new/', TeachCourseCreate.as_view(), name='create_course'),
     path('courses/edit-info/<int:pk>/', TeachCourseInfoEditView.as_view(), name='course_edit_info'),
     path('courses/edit-content/<int:pk>/', TeachCourseModulesView.as_view(), name='course_edit_content'),
-    path('courses/edit-content/<int:pk>/', TeachCourseModulesView.as_view(), name='course_edit_content'),
+    # path('courses/edit-content/<int:pk>/', TeachCourseModulesView.as_view(), name='course_edit_content'),
 
     path('api/v1/teach-search/', TeachCoursesSearchView.as_view(), name='course_search'),
 ]+router.urls
