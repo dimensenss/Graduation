@@ -1,6 +1,6 @@
 from django.core.validators import MinValueValidator
 from rest_framework.exceptions import ValidationError
-from services.models import Course, CourseModules
+from services.models import Course, CourseModules, Lesson
 from rest_framework import serializers
 
 
@@ -25,5 +25,11 @@ class CourseModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseModules
         fields = ['title', 'description', 'order']
+
+class CourseLessonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Lesson
+        fields = ['title',]
 
 

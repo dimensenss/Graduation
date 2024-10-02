@@ -69,14 +69,13 @@ class CourseModules(models.Model):
 
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons', null=True, blank=True)
     course_module = models.ForeignKey(CourseModules, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True, null=True)  # Основной текст урока
     video_url = models.URLField(blank=True, null=True)  # URL для видео
 
     def __str__(self):
-        return f'Course: {self.course} - Lesson: {self.title}'
+        return f' Lesson: {self.title}'
 
 
 # class TextTest(models.Model):

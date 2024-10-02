@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 
-from teach.course_content_edit import TeachCourseModulesView, CreateModuleAPI
+from teach.course_content_edit import TeachCourseModulesView, CreateModuleAPI, CreateLessonAPI
 from teach.views import *
 
 app_name = 'teach'
@@ -9,7 +9,8 @@ app_name = 'teach'
 
 router = routers.SimpleRouter()
 router.register('api/v1/course_edit_info', UpdateCourseView)
-router.register('api/v1/course_edit_content', CreateModuleAPI)
+router.register('api/v1/course_edit_content_module', CreateModuleAPI)
+router.register('api/v1/course_edit_content_lesson', CreateLessonAPI)
 
 
 

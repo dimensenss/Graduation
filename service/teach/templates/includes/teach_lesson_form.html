@@ -1,0 +1,66 @@
+{% load static %}
+<div class="accordion-item">
+
+    <h2 class="accordion-header" id="lesson-heading-{{ lesson.id }}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#lesson-collapse-{{ lesson.id }}" aria-expanded="false"
+                aria-controls="lesson-collapse-{{ lesson.id }}">
+            Урок: {% if lesson.title %}{{ lesson.title }}{% else %}{{ num }}{% endif %}
+        </button>
+    </h2>
+    <div id="lesson-collapse-{{ lesson.id }}" class="accordion-collapse collapse"
+         aria-labelledby="lesson-heading-{{ lesson.id }}" data-bs-parent="#lessonsAccordion-{{ module.id }}">
+        <div class="accordion-body">
+            <form class=" needs-validation" method="post" id="lesson-form-{{ lesson.id }}"
+                  data-lesson-id="{{ lesson.id }}" novalidate>
+                {% csrf_token %}
+                <input class="form-control mb-3" type="text" placeholder="Назва"
+                       id="id_title_lesson_{{ lesson.id }}"
+                       value="{% if lesson.title %}{{ lesson.title }}{% else %}{% endif %}"
+                       required>
+
+                <div class="invalid-feedback">
+                    Назва уроку обов'язкова.
+                </div>
+
+                <button class="form-control mb-3 button-3" type="submit"
+                        name="submit-lesson" id="submit-lesson-button-{{ lesson.id }}">Створити урок
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#lesson-form-{{ lesson.id }}').on('submit', function (event) {
+            event.preventDefault();
+            const lesson_id = $(this).data('lesson-id').toString();
+            const csrf_token = document.getElementById('csrf_token').value;
+            const lesson_title = document.getElementById('id_title_lesson_{{ lesson.id }}').value;
+            if (!lesson_title.trim()) {
+                return;
+            }
+
+            $.ajax({
+                url: "{% url 'teach:lesson-detail' course.id %}",
+                type: "PUT",
+                data: JSON.stringify({
+                    lesson_id: lesson_id,
+                    title: lesson_title,
+                }),
+                headers: {
+                    'X-CSRFToken': csrf_token
+                },
+                processData: false,
+                contentType: 'application/json',
+                success: function (response) {
+
+                },
+                error: function (xhr) {
+                    console.log(xhr);
+                }
+            });
+        });
+    });
+</script>

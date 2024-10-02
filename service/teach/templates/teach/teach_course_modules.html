@@ -6,72 +6,78 @@
     <div class="col-md-9">
         <div class="catalog-main-content">
             <div id="modules-container">
+                <input id="csrf_token" type="hidden" value="{{ csrf_token }}">
                 {% if not modules %}
-                    <p>Ще нічого не створено</p>
-                    <button type="button" name="create-module">Створити</button>
-                {% else %}
-                    {% for module in modules %}
-                        {% include 'includes/teach_module_form.html' with module=module %}
-
-                        <ul id="lessons-list-{{ module.id }}">
-                            {% for lesson in module.lessons.all %}
-                                <li>{{ lesson.title }}</li>
-                            {% endfor %}
-                        </ul>
-
-                    {% endfor %}
-
+                    Створіть перший модуль
                 {% endif %}
+                {% for module in modules %}
+
+                    {% include 'includes/teach_module_form.html' with module=module num=forloop.counter %}
+
+                    <hr class="border border-2 opacity-50">
+
+                {% endfor %}
+
             </div>
-<button type="button" name="create-module">Створити</button>
+            <button type="button" name="create-module" class="button-3"><i class="fa-solid fa-plus"></i> Додати модуль
+            </button>
         </div>
     </div>
 
     <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
     <script>
-
-
         $(document).ready(function () {
-            // Функция для извлечения CSRF-токена из cookies
-            function getCookie(name) {
-                let cookieValue = null;
-                if (document.cookie && document.cookie !== '') {
-                    let cookies = document.cookie.split(';');
-                    for (let i = 0; i < cookies.length; i++) {
-                        let cookie = cookies[i].trim();
-                        // Если cookie начинается с имени "name", возвращаем его значение
-                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-
-            let csrftoken = getCookie('csrftoken');
-
             $('button[name="create-module"]').click(function (event) {
                 event.preventDefault();
+                const csrf_token = document.getElementById('csrf_token').value;
 
                 $.ajax({
                     url: "{% url 'teach:coursemodules-detail' course.id %}",
                     type: "POST",
                     data: null,
                     headers: {
-                        'X-CSRFToken': csrftoken  // Используем извлеченный CSRF-токен
+                        'X-CSRFToken': csrf_token  // Используем извлеченный CSRF-токен
                     },
                     processData: false,
                     contentType: false,
                     success: function (response) {
-                         $('#modules-container').append(response.module_form);
+                        $('#modules-container').append(response.module_form);
                     },
                     error: function (xhr) {
                         console.log(xhr);
                     }
                 });
             });
+
+            $('button[name="create-lesson"]').click(function (event) {
+                event.preventDefault();
+                const csrf_token = document.getElementById('csrf_token').value;
+                const module_id = $(this).data('module-id').toString();
+
+                $.ajax({
+                    url: "{% url 'teach:lesson-detail' course.id %}",
+                    type: "POST",
+                    data: JSON.stringify({module_id: module_id}),
+                    headers: {
+                        'X-CSRFToken': csrf_token
+                    },
+                    processData: false,
+                    contentType: 'application/json',
+                    success: function (response) {
+                        $('.accordion-body-' + module_id).append(response.lesson_form);
+                    },
+                    error: function (xhr) {
+                        console.log(xhr);
+                    }
+                });
+            });
+
+
+
+
+
         });
+
 
     </script>
 
